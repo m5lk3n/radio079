@@ -3,3 +3,4 @@ trafilatura
 requests
 openai
 piper-tts
+ruff

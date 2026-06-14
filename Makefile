@@ -3,10 +3,13 @@ SRC   := $(shell pwd)/src
 TTS   := $(shell pwd)/tts
 DATA  := $(shell pwd)/data
 
-.PHONY: build run shell dev
+.PHONY: build check run shell dev
 
 build:
 	DOCKER_BUILDKIT=1 docker build -t $(IMAGE) .
+
+check: build
+	docker run --rm --entrypoint ruff $(IMAGE) check src/
 
 run: build
 	docker run --rm \

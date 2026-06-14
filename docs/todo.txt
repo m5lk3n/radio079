@@ -6,3 +6,4 @@
 (B) add Rammstein Radio snippets
 (A) pick SWR3 stories
 (C) add fetch retry
+(C) add failure handling
