@@ -5,7 +5,7 @@ TTS   := $(shell pwd)/tts
 .PHONY: build run shell dev
 
 build:
-	docker build -t $(IMAGE) .
+	DOCKER_BUILDKIT=1 docker build -t $(IMAGE) .
 
 run: build
 	docker run --rm \
