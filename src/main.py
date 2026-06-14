@@ -1,7 +1,6 @@
 import os
 
-from fetch_swr3_stories import fetch_swr3_stories
-from fetch_swr3_articles import fetch_swr3_articles
+from fetch_swr3 import fetch_swr3_stories, fetch_swr3_articles
 
 
 def main():

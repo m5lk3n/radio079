@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
 import json
+from time import sleep
 from urllib.parse import urlparse
 
 import feedparser
+import trafilatura
 
-from config import STORIES_SWR3_PATH
-
-SWR3_FEED_URL = "https://www.swr3.de/~rss/index.xml"
+from config import SWR3_STORIES_PATH, SWR3_ARTICLES_PATH, SWR3_FEED_URL
 
 
 def is_valid_url(url: str) -> bool:
@@ -63,12 +63,42 @@ def fetch_swr3_stories():
     print(f"Valid stories: {len(stories)}")
     print(f"Skipped: {skipped}")
 
-    with open(STORIES_SWR3_PATH, "w", encoding="utf-8") as f:
-        json.dump(
-            stories,
-            f,
-            ensure_ascii=False,
-            indent=2,
-        )
+    with open(SWR3_STORIES_PATH, "w", encoding="utf-8") as f:
+        json.dump(stories, f, ensure_ascii=False, indent=2)
 
     print("\nWrote data/stories-swr3.json")
+
+
+def fetch_swr3_articles():
+    with open(SWR3_STORIES_PATH, "r", encoding="utf-8") as f:
+        stories = json.load(f)
+
+    results = []
+
+    for story in stories:
+        url = story["url"]
+
+        try:
+            downloaded = trafilatura.fetch_url(url)
+
+            if downloaded:
+                text = trafilatura.extract(downloaded)
+
+                results.append({
+                    "title": story["title"],
+                    "url": url,
+                    "published": story.get("published"),
+                    "text": text,
+                })
+
+                print(f"✓ {story['title']}")
+
+            sleep(1)
+
+        except Exception as e:
+            print(f"✗ {url}: {e}")
+
+    with open(SWR3_ARTICLES_PATH, "w", encoding="utf-8") as f:
+        json.dump(results, f, ensure_ascii=False, indent=2)
+
+    print("\nWrote data/articles-swr3.json")
