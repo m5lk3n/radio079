@@ -5,7 +5,9 @@ from urllib.parse import urlparse
 
 import feedparser
 
-FEED_URL = "https://www.swr3.de/~rss/index.xml"
+from config import STORIES_SWR3_PATH
+
+SWR3_FEED_URL = "https://www.swr3.de/~rss/index.xml"
 
 
 def is_valid_url(url: str) -> bool:
@@ -22,8 +24,8 @@ def is_valid_url(url: str) -> bool:
         return False
 
 
-def fetch_swr3():
-    feed = feedparser.parse(FEED_URL)
+def fetch_swr3_stories():
+    feed = feedparser.parse(SWR3_FEED_URL)
 
     print(f"Feed: {feed.feed.get('title', 'Unknown')}")
     print(f"Entries in feed: {len(feed.entries)}")
@@ -61,7 +63,7 @@ def fetch_swr3():
     print(f"Valid stories: {len(stories)}")
     print(f"Skipped: {skipped}")
 
-    with open("/app/data/stories.json", "w", encoding="utf-8") as f:
+    with open(STORIES_SWR3_PATH, "w", encoding="utf-8") as f:
         json.dump(
             stories,
             f,
