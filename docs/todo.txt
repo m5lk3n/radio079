@@ -1,0 +1,8 @@
+(B) support tagesschau.de
+(B) support heise.de
+(B) support golem.de
+(B) support https://news.ycombinator.com/
+(B) add spoken jingles
+(B) add Rammstein Radio snippets
+(A) pick SWR3 stories
+(C) add fetch retry

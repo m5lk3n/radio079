@@ -1,20 +1,20 @@
 # radio079
 
+:construction:
+
 ## Bookmarks
 
-- https://github.com/trwmato/pi-fm-kitchen-radio/
-- https://github.com/dvehrs/podget
-- https://github.com/OHF-Voice/piper1-gpl
-- https://rhasspy.github.io/piper-samples/
+- [Pi FM Kitchen Radio Station](https://github.com/trwmato/pi-fm-kitchen-radio/)
+- [Podget](https://github.com/dvehrs/podget)
+- [Piper](https://github.com/OHF-Voice/piper1-gpl)
+- [Piper Samples](https://rhasspy.github.io/piper-samples/)
+- [Piper Voices](https://huggingface.co/rhasspy/piper-voices)
 
-## To do
+## Disclaimer
 
-- Exclude SWR3 commercial entries
-- Pick SWR3 stories
-- Support heise.de
-- Support golem.de
-- Support https://news.ycombinator.com/
-- Add spoken jingles
+- I used Claude for this project.
+- I don't like Python.
+- I'm not responsible for external links.
 
 ---
 

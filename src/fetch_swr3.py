@@ -22,50 +22,51 @@ def is_valid_url(url: str) -> bool:
         return False
 
 
-feed = feedparser.parse(FEED_URL)
+def fetch_swr3():
+    feed = feedparser.parse(FEED_URL)
 
-print(f"Feed: {feed.feed.get('title', 'Unknown')}")
-print(f"Entries in feed: {len(feed.entries)}")
-print()
+    print(f"Feed: {feed.feed.get('title', 'Unknown')}")
+    print(f"Entries in feed: {len(feed.entries)}")
+    print()
 
-stories = []
-skipped = 0
+    stories = []
+    skipped = 0
 
-for entry in feed.entries:
-    title = entry.get("title", "").strip()
-    url = entry.get("link", "").strip()
-    published = entry.get("published", "").strip()
-    summary = entry.get("summary", "").strip()
+    for entry in feed.entries:
+        title = entry.get("title", "").strip()
+        url = entry.get("link", "").strip()
+        published = entry.get("published", "").strip()
+        summary = entry.get("summary", "").strip()
 
-    if not is_valid_url(url):
-        skipped += 1
+        if not is_valid_url(url):
+            skipped += 1
+            print(f"Skipping invalid URL (title={title!r}, url={url!r})")
+            continue
 
-        print(
-            f"Skipping invalid URL "
-            f"(title={title!r}, url={url!r})"
+        if "SWR3" in title:
+            skipped += 1
+            print(f"Skipping SWR3 title (title={title!r})")
+            continue
+
+        stories.append(
+            {
+                "title": title,
+                "url": url,
+                "published": published,
+                "summary": summary,
+            }
         )
 
-        continue
+    print()
+    print(f"Valid stories: {len(stories)}")
+    print(f"Skipped: {skipped}")
 
-    stories.append(
-        {
-            "title": title,
-            "url": url,
-            "published": published,
-            "summary": summary,
-        }
-    )
+    with open("/app/data/stories.json", "w", encoding="utf-8") as f:
+        json.dump(
+            stories,
+            f,
+            ensure_ascii=False,
+            indent=2,
+        )
 
-print()
-print(f"Valid stories: {len(stories)}")
-print(f"Skipped: {skipped}")
-
-with open("stories.json", "w", encoding="utf-8") as f:
-    json.dump(
-        stories,
-        f,
-        ensure_ascii=False,
-        indent=2,
-    )
-
-print("\nWrote stories.json")
+    print("\nWrote data/stories-swr3.json")
