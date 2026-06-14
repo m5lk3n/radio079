@@ -10,6 +10,7 @@ build:
 
 check: build
 	docker run --rm --entrypoint ruff $(IMAGE) check src/
+	docker run --rm --entrypoint mypy $(IMAGE) --ignore-missing-imports src/
 
 run: build
 	docker run --rm \

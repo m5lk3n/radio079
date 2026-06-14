@@ -5,7 +5,7 @@ import os
 
 from openai import OpenAI
 
-from config import SWR3_ARTICLES_JSON, SWR3_SELECTED_ARTICLES_JSON, OPEN_API_MODEL
+from config import SWR3_ARTICLES_JSON, SWR3_PODCAST_ARTICLES_JSON, OPEN_API_MODEL
 
 SELECTION_PROMPT = """
 You are an editor for a German radio news podcast.
@@ -55,7 +55,7 @@ def select_swr3_articles():
     indices = json.loads(response.choices[0].message.content)
     selected = [articles[i] for i in indices]
 
-    with open(SWR3_SELECTED_ARTICLES_JSON, "w", encoding="utf-8") as f:
+    with open(SWR3_PODCAST_ARTICLES_JSON, "w", encoding="utf-8") as f:
         json.dump(selected, f, ensure_ascii=False, indent=2)
 
     print("Selected articles:")

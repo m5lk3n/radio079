@@ -5,7 +5,7 @@ import os
 
 from openai import OpenAI
 
-from config import OPEN_API_MODEL, SWR3_SELECTED_ARTICLES_JSON, SWR3_PODCAST_SCRIPT_TXT
+from config import OPEN_API_MODEL, SWR3_PODCAST_ARTICLES_JSON, SWR3_PODCAST_SCRIPT_TXT
 
 PODCAST_PROMPT = """
 Create a 5-minute German news podcast.
@@ -15,7 +15,7 @@ Requirements:
 - Use informal language
 - Around 700 words
 - Radio style
-- Intro
+- Intro with a greeting that's not time-specific, i.e., use "Hallo" instead of "Guten Morgen")
 - 4 main stories
 - Pause between stories
 - Outro
@@ -34,7 +34,7 @@ def generate_swr3_podcast_text():
         base_url=os.environ.get("OPENAI_BASE_URL"),
     )
 
-    with open(SWR3_SELECTED_ARTICLES_JSON, "r", encoding="utf-8") as f:
+    with open(SWR3_PODCAST_ARTICLES_JSON, "r", encoding="utf-8") as f:
         articles = json.load(f)
 
     context = ""

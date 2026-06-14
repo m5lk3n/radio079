@@ -1,7 +1,10 @@
 SWR3_STORIES_JSON = "/app/data/stories-swr3.json"
 SWR3_ARTICLES_JSON = "/app/data/articles-swr3.json"
-SWR3_SELECTED_ARTICLES_JSON = "/app/data/selected-articles-swr3.json"
+SWR3_PODCAST_ARTICLES_JSON = "/app/data/podcast-articles-swr3.json"
 SWR3_PODCAST_SCRIPT_TXT = "/app/data/podcast_script_swr3.txt"
+SWR3_PODCAST_WAV_RAW = "/app/data/podcast_swr3_raw.wav"
+SWR3_PODCAST_WAV = "/app/data/podcast_swr3.wav"
+SWR3_TTS_MODEL = "/app/tts/de_DE-thorsten-high.onnx"
 SWR3_FEED_URL = "https://www.swr3.de/~rss/index.xml"
 
 OPEN_API_MODEL = "gpt-5.4-nano"
