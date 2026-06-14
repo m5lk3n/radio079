@@ -1,5 +1,6 @@
 .claude
 .env
-tts/
 data/
+jingles/
+tts/
 *.bak
