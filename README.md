@@ -12,7 +12,7 @@
 
 ## Disclaimer
 
-- I used Claude for this project.
+- I used Claude and ChatGPT to realize this project.
 - I don't like Python.
 - I'm not responsible for external links.
 
