@@ -1,6 +1,7 @@
 .claude
 .env
 data/
+jingles/
 snippets/
 tts/
 *.bak

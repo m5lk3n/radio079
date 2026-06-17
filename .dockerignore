@@ -1,0 +1,32 @@
+# Git
+.git
+.gitignore
+
+# Environment & secrets
+.env
+
+# Claude Code
+.claude
+
+# Local data and generated output
+data/
+tts/
+jingles/
+snippets/
+
+# Docs and scratch files
+docs/
+*.bak
+todo.cfg
+
+# Dev tooling
+Makefile
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/

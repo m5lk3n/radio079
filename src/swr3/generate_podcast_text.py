@@ -15,7 +15,7 @@ Requirements:
 - Use informal language
 - Around 700 words
 - Radio style
-- Intro with a greeting that's not time-specific, i.e., use "Hallo" instead of "Guten Morgen")
+- Intro with a greeting that's not time-specific, i.e., use "Hallo" instead of "Guten Morgen". Make it clear, it's an SWR3 podcast.
 - 4 main stories
 - Pause between stories
 - Outro

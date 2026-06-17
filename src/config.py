@@ -1,10 +1,39 @@
-SWR3_STORIES_JSON = "/app/data/stories-swr3.json"
-SWR3_ARTICLES_JSON = "/app/data/articles-swr3.json"
-SWR3_PODCAST_ARTICLES_JSON = "/app/data/podcast-articles-swr3.json"
-SWR3_PODCAST_SCRIPT_TXT = "/app/data/podcast_script_swr3.txt"
-SWR3_PODCAST_WAV_RAW = "/app/data/podcast_swr3_raw.wav"
-SWR3_PODCAST_WAV = "/app/data/podcast_swr3.wav"
+import shutil
+from datetime import date, timedelta
+from pathlib import Path
+
+_DATA_ROOT = Path("/app/data")
+_DATE_DIR = _DATA_ROOT / date.today().strftime("%Y%m%d")
+_SWR3_DIR = _DATE_DIR / "swr3"
+_WEATHER_DIR = _DATE_DIR / "weather"
+_SWR3_DIR.mkdir(parents=True, exist_ok=True)
+_WEATHER_DIR.mkdir(parents=True, exist_ok=True)
+
+# The following maintenance runs at import time — when config.py is first imported,
+# it iterates /app/data, parses each subdirectory name as a YYYYMMDD date,
+# and removes (via shutil.rmtree) any that are older than 7 days.
+# Non-matching directory names are silently skipped.
+_CUTOFF = date.today() - timedelta(days=7)
+for _d in _DATA_ROOT.iterdir():
+    if _d.is_dir():
+        try:
+            if date.fromisoformat(_d.name[:4] + "-" + _d.name[4:6] + "-" + _d.name[6:8]) < _CUTOFF:
+                shutil.rmtree(_d)
+        except ValueError:
+            pass
+
+SWR3_STORIES_JSON = str(_SWR3_DIR / "stories.json")
+SWR3_ARTICLES_JSON = str(_SWR3_DIR / "articles.json")
+SWR3_PODCAST_ARTICLES_JSON = str(_SWR3_DIR / "podcast-articles.json")
+SWR3_PODCAST_SCRIPT_TXT = str(_SWR3_DIR / "podcast_script.txt")
+SWR3_PODCAST_WAV_RAW = str(_SWR3_DIR / "podcast_raw.wav")
+SWR3_PODCAST_WAV = str(_SWR3_DIR / "podcast.wav")
 SWR3_TTS_MODEL = "/app/tts/de_DE-thorsten-high.onnx"
 SWR3_FEED_URL = "https://www.swr3.de/~rss/index.xml"
 
 OPEN_API_MODEL = "gpt-5.4-nano"
+
+WEATHER_JSON = str(_WEATHER_DIR / "weather.json")
+WEATHER_TEXT_TXT = str(_WEATHER_DIR / "weather_text.txt")
+WEATHER_WAV_RAW = str(_WEATHER_DIR / "weather_raw.wav")
+WEATHER_WAV = str(_WEATHER_DIR / "weather.wav")

@@ -1,0 +1,2 @@
+x 2026-06-17 pick SWR3 stories
+x 2026-06-17 add today with weather jingle
