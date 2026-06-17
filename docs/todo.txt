@@ -2,7 +2,7 @@
 (A) support heise.de
 (A) support golem.de
 (B) add spoken jingles
-(B) add Rammstein Radio snippets
+(B) add musical snippets
 (C) add fetch retry
 (C) add failure handling
 (C) update README
