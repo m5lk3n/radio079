@@ -5,8 +5,10 @@ from pathlib import Path
 _DATA_ROOT = Path("/app/data")
 _DATE_DIR = _DATA_ROOT / date.today().strftime("%Y%m%d")
 _SWR3_DIR = _DATE_DIR / "swr3"
+_HEISE_DIR = _DATE_DIR / "heise"
 _WEATHER_DIR = _DATE_DIR / "weather"
 _SWR3_DIR.mkdir(parents=True, exist_ok=True)
+_HEISE_DIR.mkdir(parents=True, exist_ok=True)
 _WEATHER_DIR.mkdir(parents=True, exist_ok=True)
 
 # The following maintenance runs at import time — when config.py is first imported,
@@ -28,8 +30,14 @@ SWR3_PODCAST_ARTICLES_JSON = str(_SWR3_DIR / "podcast-articles.json")
 SWR3_PODCAST_SCRIPT_TXT = str(_SWR3_DIR / "podcast_script.txt")
 SWR3_PODCAST_WAV_RAW = str(_SWR3_DIR / "podcast_raw.wav")
 SWR3_PODCAST_WAV = str(_SWR3_DIR / "podcast.wav")
-SWR3_TTS_MODEL = "/app/tts/de_DE-thorsten-high.onnx"
+TTS_MODEL = "/app/tts/de_DE-thorsten-high.onnx"
 SWR3_FEED_URL = "https://www.swr3.de/~rss/index.xml"
+
+HEISE_TOP_FEED_URL = "https://www.heise.de/rss/heise-top-atom.xml"
+HEISE_IT_FEED_URL = "https://www.heise.de/rss/heise-Rubrik-IT-atom.xml"
+HEISE_STORIES_JSON = str(_HEISE_DIR / "stories.json")
+HEISE_ARTICLES_JSON = str(_HEISE_DIR / "articles.json")
+HEISE_PODCAST_STORIES_JSON = str(_HEISE_DIR / "podcast-stories.json")
 
 OPEN_API_MODEL = "gpt-5.4-nano"
 

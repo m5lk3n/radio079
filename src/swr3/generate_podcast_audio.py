@@ -6,7 +6,7 @@ from config import (
     SWR3_PODCAST_SCRIPT_TXT,
     SWR3_PODCAST_WAV_RAW,
     SWR3_PODCAST_WAV,
-    SWR3_TTS_MODEL,
+    TTS_MODEL,
 )
 
 # Does the following on the command line:
@@ -17,7 +17,7 @@ def generate_swr3_podcast_audio():
         script = f.read()
 
     subprocess.run(
-        ["piper", "-m", SWR3_TTS_MODEL, "-f", SWR3_PODCAST_WAV_RAW],
+        ["piper", "-m", TTS_MODEL, "-f", SWR3_PODCAST_WAV_RAW],
         input=script.encode(),
         check=True,
     )

@@ -1,3 +1,5 @@
+from heise.fetch_data import fetch_heise_stories, fetch_heise_articles
+from heise.select_stories import select_heise_stories
 from swr3.fetch_data import fetch_swr3_stories, fetch_swr3_articles
 from swr3.generate_podcast_audio import generate_swr3_podcast_audio
 from swr3.generate_podcast_text import generate_swr3_podcast_text
@@ -8,15 +10,19 @@ from weather.generate_text import generate_weather_text
 
 
 def main():
-    fetch_weather_data()
-    generate_weather_text()
-    generate_today_greeting_weather_audio()
+    fetch_heise_stories()
+    select_heise_stories()
+    fetch_heise_articles()
 
-    fetch_swr3_stories()
-    fetch_swr3_articles()
-    select_swr3_articles()
-    generate_swr3_podcast_text()
-    generate_swr3_podcast_audio()
+    # fetch_weather_data()
+    # generate_weather_text()
+    # generate_today_greeting_weather_audio()
+
+    # fetch_swr3_stories()
+    # fetch_swr3_articles()
+    # select_swr3_articles()
+    # generate_swr3_podcast_text()
+    # generate_swr3_podcast_audio()
 
 
 if __name__ == "__main__":

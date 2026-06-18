@@ -3,7 +3,7 @@
 import subprocess
 
 from config import (
-    SWR3_TTS_MODEL,
+    TTS_MODEL,
     WEATHER_TEXT_TXT,
     WEATHER_WAV,
     WEATHER_WAV_RAW,
@@ -15,7 +15,7 @@ def generate_today_greeting_weather_audio():
         text = f.read()
 
     subprocess.run(
-        ["piper", "-m", SWR3_TTS_MODEL, "-f", WEATHER_WAV_RAW],
+        ["piper", "-m", TTS_MODEL, "-f", WEATHER_WAV_RAW],
         input=text.encode(),
         check=True,
     )

@@ -62,4 +62,4 @@ def select_swr3_articles():
     for i, a in zip(indices, selected):
         print(f"  [{i}] {a['title']}")
 
-    print("\nWrote data/selected-articles-swr3.json")
+    print(f"\nWrote {SWR3_PODCAST_ARTICLES_JSON}")

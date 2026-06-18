@@ -55,4 +55,4 @@ TITLE: {article['title']}
     with open(SWR3_PODCAST_SCRIPT_TXT, "w", encoding="utf-8") as f:
         f.write(script)
 
-    print(f"Wrote data/podcast_script_swr3.txt ({len(script)} chars)")
+    print(f"Wrote {SWR3_PODCAST_SCRIPT_TXT} ({len(script)} chars)")

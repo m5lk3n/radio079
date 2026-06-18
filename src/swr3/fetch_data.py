@@ -66,7 +66,7 @@ def fetch_swr3_stories():
     with open(SWR3_STORIES_JSON, "w", encoding="utf-8") as f:
         json.dump(stories, f, ensure_ascii=False, indent=2)
 
-    print("\nWrote data/stories-swr3.json")
+    print(f"\nWrote {SWR3_STORIES_JSON}")
 
 
 def fetch_swr3_articles():
@@ -101,4 +101,4 @@ def fetch_swr3_articles():
     with open(SWR3_ARTICLES_JSON, "w", encoding="utf-8") as f:
         json.dump(results, f, ensure_ascii=False, indent=2)
 
-    print("\nWrote data/articles-swr3.json")
+    print(f"\nWrote {SWR3_ARTICLES_JSON}")
