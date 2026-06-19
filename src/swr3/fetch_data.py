@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 import feedparser
 import trafilatura
 
-from config import SWR3_STORIES_JSON, SWR3_ARTICLES_JSON, SWR3_FEED_URL
+from config import SWR3_STORIES_JSON, SWR3_PODCAST_STORIES_JSON, SWR3_PODCAST_ARTICLES_JSON, SWR3_FEED_URL
 
 
 def is_valid_url(url: str) -> bool:
@@ -70,7 +70,7 @@ def fetch_swr3_stories():
 
 
 def fetch_swr3_articles():
-    with open(SWR3_STORIES_JSON, "r", encoding="utf-8") as f:
+    with open(SWR3_PODCAST_STORIES_JSON, "r", encoding="utf-8") as f:
         stories = json.load(f)
 
     results = []
@@ -98,7 +98,7 @@ def fetch_swr3_articles():
         except Exception as e:
             print(f"✗ {url}: {e}")
 
-    with open(SWR3_ARTICLES_JSON, "w", encoding="utf-8") as f:
+    with open(SWR3_PODCAST_ARTICLES_JSON, "w", encoding="utf-8") as f:
         json.dump(results, f, ensure_ascii=False, indent=2)
 
-    print(f"\nWrote {SWR3_ARTICLES_JSON}")
+    print(f"\nWrote {SWR3_PODCAST_ARTICLES_JSON}")

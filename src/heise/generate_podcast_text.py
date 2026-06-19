@@ -5,17 +5,17 @@ import os
 
 from openai import OpenAI
 
-from config import OPEN_API_MODEL, SWR3_PODCAST_ARTICLES_JSON, SWR3_PODCAST_SCRIPT_TXT
+from config import OPEN_API_MODEL, HEISE_PODCAST_ARTICLES_JSON, HEISE_PODCAST_SCRIPT_TXT
 
 PODCAST_PROMPT = """
-Create a 5-minute German news podcast.
+Create a 5-minute German IT news podcast.
 
 Requirements:
 - German language
 - Use informal language
 - Around 700 words
 - Radio style
-- Intro with a greeting that's not time-specific, i.e., use "Hallo" instead of "Guten Morgen". Make it clear, it's an SWR3 podcast.
+- Intro with a greeting that's not time-specific, i.e., use "Hallo" instead of "Guten Morgen". Make it clear, it's a heise podcast.
 - 3 main stories
 - End with a simple outro, but no call for action, e.g., "Das war's für heute. Vielen Dank fürs Zuhören. Bis zum nächsten Mal."
 - Mention source publication names naturally
@@ -27,13 +27,13 @@ Articles:
 """
 
 
-def generate_swr3_podcast_text():
+def generate_heise_podcast_text():
     client = OpenAI(
         api_key=os.environ["OPENAI_API_KEY"],
         base_url=os.environ.get("OPENAI_BASE_URL"),
     )
 
-    with open(SWR3_PODCAST_ARTICLES_JSON, "r", encoding="utf-8") as f:
+    with open(HEISE_PODCAST_ARTICLES_JSON, "r", encoding="utf-8") as f:
         articles = json.load(f)
 
     context = ""
@@ -51,7 +51,7 @@ TITLE: {article['title']}
 
     script = response.output_text
 
-    with open(SWR3_PODCAST_SCRIPT_TXT, "w", encoding="utf-8") as f:
+    with open(HEISE_PODCAST_SCRIPT_TXT, "w", encoding="utf-8") as f:
         f.write(script)
 
-    print(f"Wrote {SWR3_PODCAST_SCRIPT_TXT} ({len(script)} chars)")
+    print(f"Wrote {HEISE_PODCAST_SCRIPT_TXT} ({len(script)} chars)")

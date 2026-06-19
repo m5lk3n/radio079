@@ -10,19 +10,20 @@ from config import HEISE_STORIES_JSON, HEISE_PODCAST_STORIES_JSON, OPEN_API_MODE
 SELECTION_PROMPT = """
 You are an editor for a German radio IT news podcast.
 
-From the list of stories below, select the 4 most important ones.
+From the list of stories below, select the 3 most important ones.
 
 Rules:
 - No duplicates (same story reported differently counts as one)
 - No politics
 - No war
-- No Microsoft Windows
+- No Microsoft
 - No social media
+- No network
+- No security, unless it's a major story, related to Android or iOS 
 - Prioritize stories in this order:
-  1. Linux
-  2. Cloud
-  3. Open Source
-  4. AI
+  1. Cloud
+  2. AI
+  3. Linux / Open Source
 
 Return ONLY a JSON array of the selected story indices (0-based), e.g. [2, 5, 11, 14].
 No explanation, no markdown, just the JSON array.

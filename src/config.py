@@ -24,22 +24,25 @@ for _d in _DATA_ROOT.iterdir():
         except ValueError:
             pass
 
+OPEN_API_MODEL = "gpt-5.4-nano"
+TTS_MODEL = "/app/tts/de_DE-thorsten-high.onnx"
+
+SWR3_FEED_URL = "https://www.swr3.de/~rss/index.xml"
 SWR3_STORIES_JSON = str(_SWR3_DIR / "stories.json")
-SWR3_ARTICLES_JSON = str(_SWR3_DIR / "articles.json")
+SWR3_PODCAST_STORIES_JSON = str(_SWR3_DIR / "podcast-stories.json")
 SWR3_PODCAST_ARTICLES_JSON = str(_SWR3_DIR / "podcast-articles.json")
 SWR3_PODCAST_SCRIPT_TXT = str(_SWR3_DIR / "podcast_script.txt")
 SWR3_PODCAST_WAV_RAW = str(_SWR3_DIR / "podcast_raw.wav")
 SWR3_PODCAST_WAV = str(_SWR3_DIR / "podcast.wav")
-TTS_MODEL = "/app/tts/de_DE-thorsten-high.onnx"
-SWR3_FEED_URL = "https://www.swr3.de/~rss/index.xml"
 
 HEISE_TOP_FEED_URL = "https://www.heise.de/rss/heise-top-atom.xml"
 HEISE_IT_FEED_URL = "https://www.heise.de/rss/heise-Rubrik-IT-atom.xml"
 HEISE_STORIES_JSON = str(_HEISE_DIR / "stories.json")
-HEISE_ARTICLES_JSON = str(_HEISE_DIR / "articles.json")
 HEISE_PODCAST_STORIES_JSON = str(_HEISE_DIR / "podcast-stories.json")
-
-OPEN_API_MODEL = "gpt-5.4-nano"
+HEISE_PODCAST_ARTICLES_JSON = str(_HEISE_DIR / "podcast-articles.json")
+HEISE_PODCAST_SCRIPT_TXT = str(_HEISE_DIR / "podcast_script.txt")
+HEISE_PODCAST_WAV_RAW = str(_HEISE_DIR / "podcast_raw.wav")
+HEISE_PODCAST_WAV = str(_HEISE_DIR / "podcast.wav")
 
 WEATHER_JSON = str(_WEATHER_DIR / "weather.json")
 WEATHER_TEXT_TXT = str(_WEATHER_DIR / "weather_text.txt")

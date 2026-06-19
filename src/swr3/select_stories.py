@@ -5,12 +5,12 @@ import os
 
 from openai import OpenAI
 
-from config import SWR3_ARTICLES_JSON, SWR3_PODCAST_ARTICLES_JSON, OPEN_API_MODEL
+from config import SWR3_STORIES_JSON, SWR3_PODCAST_STORIES_JSON, OPEN_API_MODEL
 
 SELECTION_PROMPT = """
 You are an editor for a German radio news podcast.
 
-From the list of articles below, select the 4 most important ones.
+From the list of stories below, select the 3 most important ones.
 
 Rules:
 - No duplicates (same story reported differently counts as one)
@@ -21,25 +21,25 @@ Rules:
   2. Europe
   3. World
 
-Return ONLY a JSON array of the selected article indices (0-based), e.g. [2, 5, 11, 14].
+Return ONLY a JSON array of the selected story indices (0-based), e.g. [2, 5, 11, 14].
 No explanation, no markdown, just the JSON array.
 
-Articles:
-{articles}
+Stories:
+{stories}
 """
 
 
-def select_swr3_articles():
+def select_swr3_stories():
     client = OpenAI(
         api_key=os.environ["OPENAI_API_KEY"],
         base_url=os.environ.get("OPENAI_BASE_URL"),
     )
 
-    with open(SWR3_ARTICLES_JSON, "r", encoding="utf-8") as f:
-        articles = json.load(f)
+    with open(SWR3_STORIES_JSON, "r", encoding="utf-8") as f:
+        stories = json.load(f)
 
-    article_list = "\n".join(
-        f"[{i}] {a['title']}" for i, a in enumerate(articles)
+    story_list = "\n".join(
+        f"[{i}] {a['title']}" for i, a in enumerate(stories)
     )
 
     response = client.chat.completions.create(
@@ -47,19 +47,19 @@ def select_swr3_articles():
         messages=[
             {
                 "role": "user",
-                "content": SELECTION_PROMPT.format(articles=article_list),
+                "content": SELECTION_PROMPT.format(stories=story_list),
             }
         ],
     )
 
     indices = json.loads(response.choices[0].message.content)
-    selected = [articles[i] for i in indices]
+    selected = [stories[i] for i in indices]
 
-    with open(SWR3_PODCAST_ARTICLES_JSON, "w", encoding="utf-8") as f:
+    with open(SWR3_PODCAST_STORIES_JSON, "w", encoding="utf-8") as f:
         json.dump(selected, f, ensure_ascii=False, indent=2)
 
-    print("Selected articles:")
+    print("Selected stories:")
     for i, a in zip(indices, selected):
         print(f"  [{i}] {a['title']}")
 
-    print(f"\nWrote {SWR3_PODCAST_ARTICLES_JSON}")
+    print(f"\nWrote {SWR3_PODCAST_STORIES_JSON}")

@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 import feedparser
 import trafilatura
 
-from config import HEISE_STORIES_JSON, HEISE_ARTICLES_JSON, HEISE_TOP_FEED_URL, HEISE_IT_FEED_URL
+from config import HEISE_STORIES_JSON, HEISE_PODCAST_STORIES_JSON, HEISE_PODCAST_ARTICLES_JSON, HEISE_TOP_FEED_URL, HEISE_IT_FEED_URL
 
 
 def is_valid_url(url: str) -> bool:
@@ -87,7 +87,7 @@ def fetch_heise_stories():
 
 
 def fetch_heise_articles():
-    with open(HEISE_STORIES_JSON, "r", encoding="utf-8") as f:
+    with open(HEISE_PODCAST_STORIES_JSON, "r", encoding="utf-8") as f:
         stories = json.load(f)
 
     results = []
@@ -115,7 +115,7 @@ def fetch_heise_articles():
         except Exception as e:
             print(f"✗ {url}: {e}")
 
-    with open(HEISE_ARTICLES_JSON, "w", encoding="utf-8") as f:
+    with open(HEISE_PODCAST_ARTICLES_JSON, "w", encoding="utf-8") as f:
         json.dump(results, f, ensure_ascii=False, indent=2)
 
-    print(f"\nWrote {HEISE_ARTICLES_JSON}")
+    print(f"\nWrote {HEISE_PODCAST_ARTICLES_JSON}")

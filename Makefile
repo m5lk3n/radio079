@@ -47,6 +47,7 @@ play:
 	mpg123 jingles/intro.mp3
 	aplay data/$$(date +%Y%m%d)/weather/weather.wav
 	aplay data/$$(date +%Y%m%d)/swr3/podcast.wav
+	aplay data/$$(date +%Y%m%d)/heise/podcast.wav
 
 ## dev: run the application in development mode, mounting the source code for live editing
 .PHONY: dev

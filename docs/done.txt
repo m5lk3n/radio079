@@ -1,2 +1,4 @@
 x 2026-06-17 pick SWR3 stories
 x 2026-06-17 add today with weather jingle
+x 2026-06-19 support heise.de
+x 2026-06-19 make it 3 stories each

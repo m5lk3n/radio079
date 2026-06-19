@@ -1,5 +1,4 @@
-(A) support tagesschau.de
-(A) support heise.de
+(A) support tagesschau.de (?)
 (A) support golem.de
 (B) add spoken jingles
 (B) add musical snippets
@@ -11,3 +10,6 @@
 (D) tag the container image properly
 (D) prefix radio079 with my dev domain
 (D) create a .env.example
+(B) add pause between stories
+(D) add outros (?)
+(A) add voices, alternate
