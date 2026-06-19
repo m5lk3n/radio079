@@ -1,3 +1,7 @@
+from golem.fetch_data import fetch_golem_stories, fetch_golem_articles
+from golem.select_stories import select_golem_stories
+from golem.generate_podcast_text import generate_golem_podcast_text
+from golem.generate_podcast_audio import generate_golem_podcast_audio
 from heise.fetch_data import fetch_heise_stories, fetch_heise_articles
 from heise.select_stories import select_heise_stories
 from heise.generate_podcast_audio import generate_heise_podcast_audio
@@ -12,6 +16,12 @@ from weather.generate_text import generate_weather_text
 
 
 def main():
+    fetch_golem_stories()
+    select_golem_stories()
+    fetch_golem_articles()
+    generate_golem_podcast_text()
+    generate_golem_podcast_audio()
+
     fetch_heise_stories()
     select_heise_stories()
     fetch_heise_articles()

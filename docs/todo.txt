@@ -1,5 +1,4 @@
 (A) support tagesschau.de (?)
-(A) support golem.de
 (B) add spoken jingles
 (B) add musical snippets
 (C) add fetch retry

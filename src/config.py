@@ -6,9 +6,11 @@ _DATA_ROOT = Path("/app/data")
 _DATE_DIR = _DATA_ROOT / date.today().strftime("%Y%m%d")
 _SWR3_DIR = _DATE_DIR / "swr3"
 _HEISE_DIR = _DATE_DIR / "heise"
+_GOLEM_DIR = _DATE_DIR / "golem"
 _WEATHER_DIR = _DATE_DIR / "weather"
 _SWR3_DIR.mkdir(parents=True, exist_ok=True)
 _HEISE_DIR.mkdir(parents=True, exist_ok=True)
+_GOLEM_DIR.mkdir(parents=True, exist_ok=True)
 _WEATHER_DIR.mkdir(parents=True, exist_ok=True)
 
 # The following maintenance runs at import time — when config.py is first imported,
@@ -43,6 +45,15 @@ HEISE_PODCAST_ARTICLES_JSON = str(_HEISE_DIR / "podcast-articles.json")
 HEISE_PODCAST_SCRIPT_TXT = str(_HEISE_DIR / "podcast_script.txt")
 HEISE_PODCAST_WAV_RAW = str(_HEISE_DIR / "podcast_raw.wav")
 HEISE_PODCAST_WAV = str(_HEISE_DIR / "podcast.wav")
+
+GOLEM_FEED_URL = "https://rss.golem.de/rss.php?feed=ATOM1.0"
+GOLEM_STORIES_JSON = str(_GOLEM_DIR / "stories.json")
+GOLEM_PODCAST_STORIES_JSON = str(_GOLEM_DIR / "podcast-stories.json")
+GOLEM_PODCAST_ARTICLES_JSON = str(_GOLEM_DIR / "podcast-articles.json")
+GOLEM_PODCAST_SCRIPT_TXT = str(_GOLEM_DIR / "podcast_script.txt")
+GOLEM_PODCAST_WAV_RAW = str(_GOLEM_DIR / "podcast_raw.wav")
+GOLEM_PODCAST_WAV = str(_GOLEM_DIR / "podcast.wav")
+
 
 WEATHER_JSON = str(_WEATHER_DIR / "weather.json")
 WEATHER_TEXT_TXT = str(_WEATHER_DIR / "weather_text.txt")
