@@ -41,7 +41,7 @@ _WEATHER_CODES = {
 }
 
 _GREETING_PROMPT = """
-Du bist ein deutschsprachiger Moderator bei Radio 079, einem lokalen Radiosender für {location}.
+Du bist ein deutschsprachiger Moderator bei Radio 0 7 9, einem lokalen Radiosender für {location}.
 Schreibe ein kurzes, lebendiges "Hallo" (ca. 60-80 Wörter, jedoch keinen "Guten Morgen"), der das heutige Wetter einbezieht.
 
 Wetterdaten für heute ({date}):

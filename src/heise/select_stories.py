@@ -5,7 +5,7 @@ import os
 
 from openai import OpenAI
 
-from config import HEISE_STORIES_JSON, HEISE_PODCAST_STORIES_JSON, OPEN_API_MODEL
+from config import HEISE_STORIES_JSON, HEISE_PODCAST_STORIES_JSON, GOLEM_PODCAST_STORIES_JSON, OPEN_API_MODEL
 
 SELECTION_PROMPT = """
 You are an editor for a German radio IT news podcast.
@@ -19,11 +19,15 @@ Rules:
 - No Microsoft
 - No social media
 - No network
-- No security, unless it's a major story, related to Android or iOS 
+- No security, unless it's a major story, related to Android or iOS
 - Prioritize stories in this order:
   1. Cloud
   2. AI
   3. Linux / Open Source
+- Do NOT select stories that cover the same topic as any of the already-selected Golem stories listed below
+
+Already selected Golem stories (avoid repeating these topics):
+{golem_stories}
 
 Return ONLY a JSON array of the selected story indices (0-based), e.g. [2, 5, 11, 14].
 No explanation, no markdown, just the JSON array.
@@ -39,6 +43,11 @@ def select_heise_stories():
         base_url=os.environ.get("OPENAI_BASE_URL"),
     )
 
+    with open(GOLEM_PODCAST_STORIES_JSON, "r", encoding="utf-8") as f:
+        golem_stories = json.load(f)
+
+    golem_list = "\n".join(f"- {a['title']}" for a in golem_stories)
+
     with open(HEISE_STORIES_JSON, "r", encoding="utf-8") as f:
         stories = json.load(f)
 
@@ -51,7 +60,9 @@ def select_heise_stories():
         messages=[
             {
                 "role": "user",
-                "content": SELECTION_PROMPT.format(stories=story_list),
+                "content": SELECTION_PROMPT.format(
+                    golem_stories=golem_list, stories=story_list
+                ),
             }
         ],
     )

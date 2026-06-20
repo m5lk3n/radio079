@@ -16,6 +16,12 @@ from weather.generate_text import generate_weather_text
 
 
 def main():
+    fetch_weather_data()
+    generate_weather_text()
+    generate_today_greeting_weather_audio()
+
+    # Golem must run before Heise: select_heise_stories reads the Golem-selected
+    # articles to avoid picking the same topics.
     fetch_golem_stories()
     select_golem_stories()
     fetch_golem_articles()
@@ -27,10 +33,6 @@ def main():
     fetch_heise_articles()
     generate_heise_podcast_text()
     generate_heise_podcast_audio()
-
-    fetch_weather_data()
-    generate_weather_text()
-    generate_today_greeting_weather_audio()
 
     fetch_swr3_stories()
     select_swr3_stories()
