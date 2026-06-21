@@ -22,23 +22,23 @@ def main():
 
     # Golem must run before Heise: select_heise_stories reads the Golem-selected
     # articles to avoid picking the same topics.
-    fetch_golem_stories()
-    select_golem_stories()
-    fetch_golem_articles()
-    generate_golem_podcast_text()
-    generate_golem_podcast_audio()
+    # fetch_golem_stories()
+    # select_golem_stories()
+    # fetch_golem_articles()
+    # generate_golem_podcast_text()
+    # generate_golem_podcast_audio()
 
-    fetch_heise_stories()
-    select_heise_stories()
-    fetch_heise_articles()
-    generate_heise_podcast_text()
-    generate_heise_podcast_audio()
+    # fetch_heise_stories()
+    # select_heise_stories()
+    # fetch_heise_articles()
+    # generate_heise_podcast_text()
+    # generate_heise_podcast_audio()
 
-    fetch_swr3_stories()
-    select_swr3_stories()
-    fetch_swr3_articles()
-    generate_swr3_podcast_text()
-    generate_swr3_podcast_audio()
+    # fetch_swr3_stories()
+    # select_swr3_stories()
+    # fetch_swr3_articles()
+    # generate_swr3_podcast_text()
+    # generate_swr3_podcast_audio()
 
 
 if __name__ == "__main__":

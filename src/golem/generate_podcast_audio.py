@@ -1,25 +1,24 @@
 #!/usr/bin/env python3
 
+import random
 import subprocess
 
+import cartesia
 from config import (
     GOLEM_PODCAST_SCRIPT_TXT,
     GOLEM_PODCAST_WAV_RAW,
     GOLEM_PODCAST_WAV,
-    TTS_MODEL,
 )
+
+_MALE_EMOTIONS = ["calm", "excited", "neutral"]
 
 
 def generate_golem_podcast_audio():
     with open(GOLEM_PODCAST_SCRIPT_TXT, "r", encoding="utf-8") as f:
         script = f.read()
 
-    subprocess.run(
-        ["piper", "-m", TTS_MODEL, "-f", GOLEM_PODCAST_WAV_RAW],
-        input=script.encode(),
-        check=True,
-    )
-    print(f"Wrote {GOLEM_PODCAST_WAV_RAW}")
+    emotion = random.choice(_MALE_EMOTIONS)
+    cartesia.tts(script, cartesia.MALE_VOICE_ID, emotion, GOLEM_PODCAST_WAV_RAW)
 
     subprocess.run(
         [

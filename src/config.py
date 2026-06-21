@@ -27,7 +27,6 @@ for _d in _DATA_ROOT.iterdir():
             pass
 
 OPEN_API_MODEL = "gpt-5.4-nano"
-TTS_MODEL = "/app/tts/de_DE-thorsten-high.onnx"
 
 SWR3_FEED_URL = "https://www.swr3.de/~rss/index.xml"
 SWR3_STORIES_JSON = str(_SWR3_DIR / "stories.json")

@@ -2,6 +2,5 @@ feedparser
 trafilatura
 requests
 openai
-piper-tts
 ruff
 mypy

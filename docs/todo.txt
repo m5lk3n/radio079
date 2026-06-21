@@ -1,14 +1,13 @@
-(A) support tagesschau.de (?)
 (B) add spoken jingles
 (B) add musical snippets
-(C) add fetch retry
-(C) add failure handling
+(A) add fetch retry
+(A) add failure handling
 (C) update README
-(B) use a moody voice depending on weather forecast
-(C) play an error for failed audio generation
+(A) play an error for failed audio generation
 (D) tag the container image properly
 (D) prefix radio079 with my dev domain
 (D) create a .env.example
-(B) add pause between stories
+(A) add pause between stories
 (D) add outros (?)
-(A) add voices, alternate
+(C) rename CARTESIA_API_KEY to TTS_API_KEY
+(C) rename OPENAI_ to LLM_
