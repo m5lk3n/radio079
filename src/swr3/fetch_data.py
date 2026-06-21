@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import json
+from datetime import date
+from email.utils import parsedate_to_datetime
 from time import sleep
 from urllib.parse import urlparse
 
@@ -40,9 +42,29 @@ def fetch_swr3_stories():
         published = entry.get("published", "").strip()
         summary = entry.get("summary", "").strip()
 
+        try:
+            published_date = parsedate_to_datetime(published).date()
+        except Exception:
+            published_date = None
+
+        if published_date != date.today():
+            skipped += 1
+            print(f"Skipping old story (published={published!r}, title={title!r})")
+            continue
+
         if not is_valid_url(url):
             skipped += 1
             print(f"Skipping invalid URL (title={title!r}, url={url!r})")
+            continue
+
+        if "swr3.de/podcasts" in url:
+            skipped += 1
+            print(f"Skipping SWR3 podcast URL (title={title!r}, url={url!r})")
+            continue
+
+        if "ardsounds.de" in url:
+            skipped += 1
+            print(f"Skipping ARD Sounds URL (title={title!r}, url={url!r})")
             continue
 
         if "SWR3" in title:

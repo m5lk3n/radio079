@@ -17,6 +17,7 @@ Requirements:
 - Radio style
 - Intro with a greeting that's not time-specific, i.e., use "Hallo" instead of "Guten Morgen". Make it clear, it's a heise podcast.
 - 3 main stories
+- Add the following tag between the stories, exactly as written here: <break time="1s"/>
 - End with a simple outro, but no call for action, e.g., "Das war's für heute. Vielen Dank fürs Zuhören. Bis zum nächsten Mal."
 - Mention source publication names naturally
 - No bullet points

@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import json
+from datetime import date
+from datetime import datetime
 from time import sleep
 from urllib.parse import urlparse
 
@@ -39,6 +41,16 @@ def fetch_golem_stories():
         url = entry.get("link", "").strip()
         published = entry.get("published", "").strip()
         summary = entry.get("summary", "").strip()
+
+        try:
+            published_date = datetime.fromisoformat(published).date()
+        except Exception:
+            published_date = None
+
+        if published_date != date.today():
+            skipped += 1
+            print(f"Skipping old story (published={published!r}, title={title!r})")
+            continue
 
         if not is_valid_url(url):
             skipped += 1

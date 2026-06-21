@@ -10,3 +10,4 @@
 (D) add a 'now playing' website using GH's :radio: as favicon 
 (C) rename CARTESIA_API_KEY to TTS_API_KEY
 (C) rename OPENAI_ to LLM_
+(A) handle the case of not enough podcast stories available
