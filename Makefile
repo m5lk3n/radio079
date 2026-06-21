@@ -41,10 +41,9 @@ shell: build
 		-v $(DATA):/app/data \
 		--entrypoint bash $(IMAGE)
 
-## play: play the generated podcast audio on the local machine
+## play: play the generated podcast radio on the local machine
 .PHONY: play
 play:
-	mpg123 jingles/intro.mp3
 	aplay data/$$(date +%Y%m%d)/weather/weather.wav
 	aplay data/$$(date +%Y%m%d)/golem/podcast.wav
 	aplay data/$$(date +%Y%m%d)/heise/podcast.wav
