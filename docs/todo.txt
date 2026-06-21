@@ -1,13 +1,12 @@
-(B) add spoken jingles
-(B) add musical snippets
+(B) record and add spoken jingles
 (A) add fetch retry
 (A) add failure handling
 (C) update README
-(A) play an error for failed audio generation
+(A) pre-record and play an error for failed audio generation
 (D) tag the container image properly
 (D) prefix radio079 with my dev domain
 (D) create a .env.example
 (A) add pause between stories
-(D) add outros (?)
+(D) add a 'now playing' website using GH's :radio: as favicon 
 (C) rename CARTESIA_API_KEY to TTS_API_KEY
 (C) rename OPENAI_ to LLM_

@@ -6,3 +6,5 @@ x 2026-06-20 support golem.de
 x 2026-06-21 add voices, alternate
 x 2026-06-21 replace Piper by Cartesia
 x 2026-06-21 use a moody voice depending on weather forecast
+x 2026-06-21 add audio snippets
+x 2026-06-21 add outros
