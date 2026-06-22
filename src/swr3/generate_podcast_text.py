@@ -15,7 +15,8 @@ Requirements:
 - Use informal language
 - Around 700 words
 - Radio style
-- Intro with a greeting that's not time-specific, i.e., use "Hallo" instead of "Guten Morgen". Make it clear, it's an SWR3 podcast.
+- Write SWR3 as S W R 3
+- Intro with a greeting that's not time-specific, i.e., use "Hallo" instead of "Guten Morgen". Make it clear, it's an S W R 3 podcast.
 - 3 main stories
 - Add the following tag between the stories, exactly as written here: <break time="1s"/>
 - End with a simple outro, but no call for action, e.g., "Das war's für heute. Vielen Dank fürs Zuhören. Bis zum nächsten Mal."
