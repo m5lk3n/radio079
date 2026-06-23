@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+  <channel>
+    <title>tagesschau in 100 Sekunden: Das aktuelle News-Update (Audio)</title>
+    <link>https://www.tagesschau.de/tagesschau_in_100_sekunden/podcast-ts100-audio-100.html</link>
+    <description>Immer die aktuellen Nachrichten von heute: Die tagesschau in 100 Sekunden liefert euch mehrmals am Tag ein kurzes News-Update. Hier zum Nachhören.</description>
+    <language>de</language>
+    <copyright>ARD-aktuell / tagesschau.de</copyright>
+    <pubDate>Tue, 23 Jun 2026 05:21:11 +0200</pubDate>
+    <lastBuildDate>Tue, 23 Jun 2026 05:21:11 +0200</lastBuildDate>
+    <managingEditor>podcast@tagesschau.de</managingEditor>
+    <webMaster>podcast@tagesschau.de</webMaster>
+    <generator>manual</generator>
+    <ttl>360</ttl>
+    <category>Daily News</category>
+    <itunes:owner>
+      <itunes:name>tagesschau</itunes:name>
+      <itunes:email>podcast@tagesschau.de</itunes:email>
+    </itunes:owner>
+    <itunes:category text="News"/>
+    <itunes:category text="News">
+      <itunes:category text="Daily News"/>
+    </itunes:category>
+    <itunes:author>tagesschau</itunes:author>
+    <itunes:image href="https://images.tagesschau.de/image/b6d58cc5-0802-467d-a65f-4d3a951b0618/AAABmQ5lnas/AAABnSStX0g/1x1-big/podcast-tagesschau-100-sekunden-100.jpg?overlay=4b852895-4b65-4038-87ff-8b7536238128&amp;overlayModificationDate=AAABl3iUYys&amp;width=3000"/>
+    <image>
+      <title>Cover: Audio-Podcast tagesschau in 100 Sekunden</title>
+      <url>https://images.tagesschau.de/image/b6d58cc5-0802-467d-a65f-4d3a951b0618/AAABmQ5lnas/AAABnSStX0g/1x1-big/podcast-tagesschau-100-sekunden-100.jpg?overlay=4b852895-4b65-4038-87ff-8b7536238128&amp;overlayModificationDate=AAABl3iUYys&amp;width=3000</url>
+      <link>https://www.tagesschau.de/tagesschau_in_100_sekunden/podcast-ts100-audio-100.html</link>
+      <width>3000</width>
+      <height>3000</height>
+    </image>
+    <item>
+      <title>tagesschau in 100 Sekunden</title>
+      <link>https://www.tagesschau.de/tagesschau_in_100_sekunden/audio-3315078.html</link>
+      <description><![CDATA[tagesschau in 100 Sekunden]]></description>
+      <pubDate>Tue, 23 Jun 2026 05:21:00 +0200</pubDate>
+      <enclosure url="https://tagesschau-podcast.ard-mcdn.de/audio/2026/0623/AU-20260623-0521-0300.mp3" type="audio/mpeg" length="2300299"/>
+      <guid isPermaLink="false">1155b0d8-3698-416a-b3a6-f8bbfdf7ff7f</guid>
+      <dc:date>2026-06-23T03:21:00Z</dc:date>
+      <content:encoded><![CDATA[tagesschau in 100 Sekunden]]></content:encoded>
+      <itunes:duration>00:02:23</itunes:duration>
+      <itunes:episodeType>full</itunes:episodeType>
+      <itunes:explicit>false</itunes:explicit>
+      <itunes:image href="https://images.tagesschau.de/image/b6d58cc5-0802-467d-a65f-4d3a951b0618/AAABmQ5lnas/AAABnSStX0g/1x1-big/podcast-tagesschau-100-sekunden-100.jpg?overlay=4b852895-4b65-4038-87ff-8b7536238128&amp;overlayModificationDate=AAABl3iUYys&amp;width=3000"/>
+      <itunes:summary>tagesschau in 100 Sekunden</itunes:summary>
+    </item>
+    <docs>http://blogs.law.harvard.edu/tech/rss</docs>
+    <dc:publisher>tagesschau.de</dc:publisher>
+    <dc:language>de</dc:language>
+    <dc:rights>ARD-aktuell / tagesschau.de</dc:rights>
+    <dc:source>tagesschau.de</dc:source>
+    <itunes:keywords>tagesschau in 100 Sekunden</itunes:keywords>
+    <itunes:summary>Immer die aktuellen Nachrichten von heute: Die tagesschau in 100 Sekunden liefert euch mehrmals am Tag ein kurzes News-Update. Hier zum Nachhören.</itunes:summary>
+    <itunes:explicit>false</itunes:explicit>
+  </channel>
+</rss>

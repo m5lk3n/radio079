@@ -1,13 +1,19 @@
-(B) record and add spoken jingles
-(A) add fetch retry
-(A) add failure handling
-(C) update README
-(A) pre-record and play an error for failed audio generation
-(D) tag the container image properly
-(D) prefix radio079 with my dev domain
-(D) create a .env.example
-(A) add pause between stories
-(D) add a 'now playing' website using GH's :radio: as favicon 
-(C) rename CARTESIA_API_KEY to TTS_API_KEY
-(C) rename OPENAI_ to LLM_
-(A) handle the case of not enough podcast stories available
+(C) record and add spoken jingles
+(B) add fetch retry
+(B) add failure handling
+(D) update README
+(B) pre-record and play an error for failed audio generation
+(E) tag the container image properly
+(E) prefix radio079 with my dev domain
+(E) create a .env.example
+(B) add pause between stories
+(E) add a 'now playing' website using GH's :radio: as favicon 
+(D) rename CARTESIA_API_KEY to TTS_API_KEY
+(D) rename OPENAI_ to LLM_
+(B) handle the case of not enough podcast stories available
+(A) remove Golem
+(A) migrate Heise to download latest audio from https://kurzinformiert.podigee.io/feed/mp3 (updated morning and afternoon)
+(A) support https://www.tagesschau.de/tagesschau_in_100_sekunden/podcast-ts100-audio-100.html (updated several times per day)
+(A) remove SWR3
+2nd stream with latest episode from https://www.kicker.de/64/podcaststartseite every 30mins (?)
+support https://www.nachrichtenleicht.de/ playing at 1.5x speed (?)
