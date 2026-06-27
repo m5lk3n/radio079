@@ -1,5 +1,4 @@
 feedparser
-trafilatura
 requests
 openai
 ruff

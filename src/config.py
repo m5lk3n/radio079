@@ -24,13 +24,9 @@ for _d in _DATA_ROOT.iterdir():
 
 OPEN_API_MODEL = "gpt-5.4-nano"
 
-HEISE_TOP_FEED_URL = "https://www.heise.de/rss/heise-top-atom.xml"
-HEISE_IT_FEED_URL = "https://www.heise.de/rss/heise-Rubrik-IT-atom.xml"
-HEISE_STORIES_JSON = str(_HEISE_DIR / "stories.json")
-HEISE_PODCAST_STORIES_JSON = str(_HEISE_DIR / "podcast-stories.json")
-HEISE_PODCAST_ARTICLES_JSON = str(_HEISE_DIR / "podcast-articles.json")
-HEISE_PODCAST_SCRIPT_TXT = str(_HEISE_DIR / "podcast_script.txt")
-HEISE_PODCAST_WAV_RAW = str(_HEISE_DIR / "podcast_raw.wav")
+HEISE_PODCAST_FEED_URL = "https://kurzinformiert.podigee.io/feed/mp3"
+HEISE_LAST_EPISODE_JSON = str(_DATA_ROOT / "heise_last_episode.json")
+HEISE_PODCAST_MP3 = str(_HEISE_DIR / "podcast_raw.mp3")
 HEISE_PODCAST_WAV = str(_HEISE_DIR / "podcast.wav")
 
 
