@@ -1,4 +1,4 @@
-(C) record and add spoken jingles
+(C) record/generate and add spoken jingles
 (B) add fetch retry
 (B) add failure handling
 (D) update README
@@ -10,6 +10,5 @@
 (E) add a 'now playing' website using GH's :radio: as favicon 
 (D) rename CARTESIA_API_KEY to TTS_API_KEY
 (D) rename OPENAI_ to LLM_
-(B) handle the case of not enough podcast stories available
 2nd stream with latest episode from https://www.kicker.de/64/podcaststartseite every 30mins (?)
 support https://www.nachrichtenleicht.de/ playing at 1.5x speed (?)
