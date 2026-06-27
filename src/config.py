@@ -24,8 +24,6 @@ for _d in _DATA_ROOT.iterdir():
         except ValueError:
             pass
 
-OPEN_API_MODEL = "gpt-5.4-nano"
-
 WEATHER_JSON = str(_WEATHER_DIR / "weather.json")
 WEATHER_TEXT_TXT = str(_WEATHER_DIR / "weather_text.txt")
 WEATHER_WAV_RAW = str(_WEATHER_DIR / "weather_raw.wav")

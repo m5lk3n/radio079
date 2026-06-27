@@ -7,7 +7,6 @@ from datetime import date as _date
 from openai import OpenAI
 
 from config import (
-    OPEN_API_MODEL,
     WEATHER_JSON,
     WEATHER_TEXT_TXT,
 )
@@ -60,7 +59,7 @@ Kein Wechsel der Sprache, bleibe durchgehend auf Deutsch.
 def generate_weather_text():
     client = OpenAI(
         api_key=os.environ["OPENAI_API_KEY"],
-        base_url=os.environ.get("OPENAI_BASE_URL"),
+        base_url=os.environ.get("OPENAI_API_BASE_URL"),
     )
 
     with open(WEATHER_JSON, "r", encoding="utf-8") as f:
@@ -78,7 +77,7 @@ def generate_weather_text():
 
     prompt = _GREETING_PROMPT.format(
         date=date_str,
-        location=os.environ["WEATHER_LOCATION_NAME"],
+        location=os.environ["WEATHER_LOCATION_ALIAS"],
         current_temp=current["temperature_2m"],
         apparent_temp=current["apparent_temperature"],
         weather_desc=weather_desc,
@@ -89,7 +88,7 @@ def generate_weather_text():
     )
 
     response = client.responses.create(
-        model=OPEN_API_MODEL,
+        model=os.environ.get("OPENAI_MODEL"),
         input=prompt,
     )
 

@@ -1,4 +1,5 @@
 import os
+from typing import Any
 
 import requests
 
@@ -23,7 +24,7 @@ def weather_emotion(weather_code: int) -> str:
 
 
 def tts(text: str, voice_id: str, emotion: str, output_path: str) -> None:
-    payload = {
+    payload: dict[str, Any] = {
         "model_id": _MODEL_ID,
         "transcript": text,
         "voice": {
