@@ -11,6 +11,5 @@
 (D) rename CARTESIA_API_KEY to TTS_API_KEY
 (D) rename OPENAI_ to LLM_
 (B) handle the case of not enough podcast stories available
-(A) support https://www.tagesschau.de/tagesschau_in_100_sekunden/podcast-ts100-audio-100.html (updated several times per day)
 2nd stream with latest episode from https://www.kicker.de/64/podcaststartseite every 30mins (?)
 support https://www.nachrichtenleicht.de/ playing at 1.5x speed (?)

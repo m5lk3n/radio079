@@ -41,14 +41,13 @@ shell: build
 		-v $(DATA):/app/data \
 		--entrypoint bash $(IMAGE)
 
-## play: play the generated podcast radio on the local machine
+## play: play the generated audio on the local machine
 .PHONY: play
 play:
 	aplay data/$$(date +%Y%m%d)/weather/weather.wav
-	aplay data/$$(date +%Y%m%d)/golem/podcast.wav
-	aplay data/$$(date +%Y%m%d)/heise/podcast.wav
 	aplay data/$$(date +%Y%m%d)/swr3/podcast.wav
-
+	aplay data/$$(date +%Y%m%d)/tagesschau/podcast.wav
+	
 ## dev: run the application in development mode, mounting the source code for live editing
 .PHONY: dev
 dev: build
