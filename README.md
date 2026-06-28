@@ -16,13 +16,6 @@
   - [Cartesia Text-to-Speech API](https://docs.cartesia.ai/api-reference/tts/bytes)
   - [Cartesia MCP](https://docs.cartesia.ai/tools/ai/mcp)
 
-### Archived
-
-- Piper
-  - [Piper](https://github.com/OHF-Voice/piper1-gpl)
-  - [Piper Samples](https://rhasspy.github.io/piper-samples/)
-  - [Piper Voices](https://huggingface.co/rhasspy/piper-voices)
-
 ## Sources
 
 - [radio.png](./radio.png) is this [GitHub asset](https://github.githubassets.com/images/icons/emoji/unicode/1f4fb.png?v8)
@@ -35,6 +28,6 @@
 
 ---
 
-## What didn't work
-
-- Kokoro (`pip install` failure)
+<p align="center">
+    <a href="https://lttl.dev/"><img alt="lttl.dev logo" src="./assets/images/logo.png" width="25%"/></a>
+</p>

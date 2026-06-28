@@ -1,0 +1,14 @@
+# Outtakes
+
+## Bookmarks
+
+### Archived
+
+- Piper
+  - [Piper](https://github.com/OHF-Voice/piper1-gpl)
+  - [Piper Samples](https://rhasspy.github.io/piper-samples/)
+  - [Piper Voices](https://huggingface.co/rhasspy/piper-voices)
+
+## What didn't work
+
+- Kokoro (`pip install` failure)
