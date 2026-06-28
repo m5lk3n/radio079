@@ -66,6 +66,17 @@ _HTML = """\
   .btn:hover:not(:disabled) { border-color: #44aaff; color: #44aaff; }
   .btn:disabled { opacity: 0.3; cursor: default; }
   .btn .icon { font-size: 1rem; line-height: 1; }
+  #rotationWrap { position: relative; padding-bottom: 1.75rem; }
+  #loopArrow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+    color: #555;
+  }
   #rotation {
     display: flex;
     align-items: flex-end;
@@ -118,7 +129,17 @@ _HTML = """\
     <button id="pause" class="btn" disabled><span class="icon" id="pauseIcon">&#9208;</span><span id="pauseLabel">pause</span></button>
     <button id="skip" class="btn" disabled><span class="icon">&#9197;</span>skip to next</button>
   </div>
-  <div id="rotation"></div>
+  <div id="rotationWrap">
+    <svg id="loopArrow" aria-hidden="true">
+      <defs>
+        <marker id="loopHead" markerWidth="9" markerHeight="9" refX="5" refY="4" orient="auto">
+          <path d="M1.2,1.2 L5.5,4 L1.2,6.8" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+      <path id="loopPath" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-dasharray="3 3" marker-end="url(#loopHead)"/>
+    </svg>
+    <div id="rotation"></div>
+  </div>
   <audio id="player"></audio>
   <footer>v__VERSION__</footer>
   <script>
@@ -128,6 +149,8 @@ _HTML = """\
     const player = document.getElementById('player');
     const statusEl = document.getElementById('status');
     const rotationEl = document.getElementById('rotation');
+    const rotationWrap = document.getElementById('rotationWrap');
+    const loopPath = document.getElementById('loopPath');
     const skipEl = document.getElementById('skip');
     const pauseEl = document.getElementById('pause');
     const pauseIcon = document.getElementById('pauseIcon');
@@ -169,7 +192,30 @@ _HTML = """\
         rotationEl.appendChild(seg);
         return seg;
       });
+      requestAnimationFrame(drawLoopArrow);
     }
+
+    // Arc a dashed "repeat" arrow below the strip, from the last dot back into the first.
+    function drawLoopArrow() {
+      if (segs.length < 2) { loopPath.removeAttribute('d'); return; }
+      const wrap = rotationWrap.getBoundingClientRect();
+      const first = segs[0].querySelector('.dot').getBoundingClientRect();
+      const last = segs[segs.length - 1].querySelector('.dot').getBoundingClientRect();
+      const x1 = last.left + last.width / 2 - wrap.left;
+      const x2 = first.left + first.width / 2 - wrap.left;
+      const y1 = last.bottom - wrap.top + 2;
+      const y2 = first.bottom - wrap.top + 2;
+      // dip below the strip; taller arc for wider spans, but kept gentle
+      const span = Math.abs(x1 - x2);
+      const dropY = Math.max(y1, y2) + Math.max(12, Math.min(span * 0.18, 22));
+      // pull control points inward so the curve enters/leaves at an angle,
+      // letting the (orient=auto) arrowhead align with the curve instead of pointing straight up
+      const k = Math.max(6, Math.min(span * 0.2, 28));
+      loopPath.setAttribute('d',
+        `M ${x1} ${y1} C ${x1 - k} ${dropY}, ${x2 + k} ${dropY}, ${x2} ${y2}`);
+    }
+
+    window.addEventListener('resize', drawLoopArrow);
 
     function highlightRotation(current) {
       segs.forEach((seg, i) => seg.classList.toggle('active', i === current));
