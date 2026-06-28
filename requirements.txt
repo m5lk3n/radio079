@@ -1,5 +1,6 @@
 feedparser
 requests
 openai
+timezonefinder
 ruff
 mypy

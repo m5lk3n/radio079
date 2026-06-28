@@ -1,9 +1,19 @@
+import os
 import shutil
-from datetime import date, timedelta
+from datetime import datetime, date, timedelta
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
+from timezonefinder import TimezoneFinder
+
+_tf = TimezoneFinder()
+_tz_name = _tf.timezone_at(
+    lat=float(os.environ["WEATHER_LOCATION_LAT"]),
+    lng=float(os.environ["WEATHER_LOCATION_LON"]),
+)
+_LOCAL_TZ = ZoneInfo(_tz_name)
 _DATA_ROOT = Path("/app/data")
-_DATE_DIR = _DATA_ROOT / date.today().strftime("%Y%m%d")
+_DATE_DIR = _DATA_ROOT / datetime.now(_LOCAL_TZ).strftime("%Y%m%d")
 _HEISE_DIR = _DATE_DIR / "heise"
 _TAGESSCHAU_DIR = _DATE_DIR / "tagesschau"
 _WEATHER_DIR = _DATE_DIR / "weather"
@@ -15,7 +25,7 @@ _WEATHER_DIR.mkdir(parents=True, exist_ok=True)
 # it iterates /app/data, parses each subdirectory name as a YYYYMMDD date,
 # and removes (via shutil.rmtree) any that are older than 7 days.
 # Non-matching directory names are silently skipped.
-_CUTOFF = date.today() - timedelta(days=7)
+_CUTOFF = datetime.now(_LOCAL_TZ).date() - timedelta(days=7)
 for _d in _DATA_ROOT.iterdir():
     if _d.is_dir():
         try:
