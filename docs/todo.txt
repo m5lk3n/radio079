@@ -5,7 +5,6 @@ record/generate and add spoken jingles
 (E) tag the container image properly
 (E) prefix radio079 with my dev domain
 (E) create a .env.example
-rename CARTESIA_API_KEY to TTS_API_KEY
 rename OPENAI_ to LLM_
 2nd stream with latest episode from https://www.kicker.de/64/podcaststartseite every 30mins (?)
 support https://www.nachrichtenleicht.de/ playing at 1.5x speed (?)

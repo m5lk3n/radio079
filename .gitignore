@@ -4,6 +4,7 @@ data/
 jingles/**
 !/jingles/**/
 !/jingles/**/.gitkeep
-snippets/
+scripts/cartesia/
+scripts/snippets/
 tts/
 *.bak

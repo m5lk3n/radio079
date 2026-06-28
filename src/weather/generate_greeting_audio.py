@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import json
+import random
 import subprocess
 
 import cartesia
@@ -21,7 +22,8 @@ def generate_today_greeting_weather_audio():
     weather_code = weather["current"]["weather_code"]
     emotion = cartesia.weather_emotion(weather_code)
 
-    cartesia.tts(text, cartesia.FEMALE_VOICE_ID, emotion, WEATHER_WAV_RAW)
+    voice_id = random.choice([cartesia.FEMALE_VOICE_ID, cartesia.MALE_VOICE_ID])
+    cartesia.tts(text, voice_id, emotion, WEATHER_WAV_RAW)
 
     subprocess.run(
         [

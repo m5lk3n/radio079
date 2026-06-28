@@ -1,25 +1,18 @@
-# Git
 .git
 .gitignore
 
-# Environment & secrets
 .env
 
-# AI
 .claude
-cartesia/
 
-# Local data and generated output
 data/
 tts/
-snippets/
+scripts/
 
-# Docs and scratch files
 docs/
 *.bak
 todo.cfg
 
-# Dev tooling
 Makefile
 
 # Python

@@ -3,10 +3,6 @@ from typing import Any
 
 import requests
 
-_API_URL = "https://api.cartesia.ai/tts/bytes"
-_API_VERSION = "2026-03-01"
-_MODEL_ID = "sonic-3.5"
-
 FEMALE_VOICE_ID = "38aabb6a-f52b-4fb0-a3d1-988518f4dc06"
 MALE_VOICE_ID = "b7187e84-fe22-4344-ba4a-bc013fcb533e"
 
@@ -25,7 +21,7 @@ def weather_emotion(weather_code: int) -> str:
 
 def tts(text: str, voice_id: str, emotion: str, output_path: str) -> None:
     payload: dict[str, Any] = {
-        "model_id": _MODEL_ID,
+        "model_id": os.environ["TTS_MODEL_ID"],
         "transcript": text,
         "voice": {
             "mode": "id",
@@ -45,10 +41,10 @@ def tts(text: str, voice_id: str, emotion: str, output_path: str) -> None:
     }
 
     response = requests.post(
-        _API_URL,
+        os.environ["TTS_API_URL"],
         headers={
-            "Cartesia-Version": _API_VERSION,
-            "X-API-Key": os.environ["CARTESIA_API_KEY"],
+            "Cartesia-Version": os.environ["TTS_API_VERSION"],
+            "X-API-Key": os.environ["TTS_API_KEY"],
             "Content-Type": "application/json",
         },
         json=payload,
