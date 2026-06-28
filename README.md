@@ -1,4 +1,3 @@
-
 <!-- markdownlint-disable MD033 -->
 <!-- markdownlint-disable MD041 -->
 <p align="center">
@@ -7,6 +6,11 @@
 <!-- markdownlint-enable MD041 -->
 
 <h1 align="center" style="font-family: 'Courier New', monospace;">radio 0 7 9</h1>
+
+<p align="center">
+<img alt="language" src="https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white"/>
+<img alt="MIT license" src="https://img.shields.io/badge/License-MIT-green"/>
+</p>
 <!-- markdownlint-enable MD033 -->
 
 A tiny local radio station. Every day it generates a spoken weather greeting
@@ -24,9 +28,14 @@ into a continuous stream, served from a minimal "now playing" web page.
   [podcast feed](https://kurzinformiert.podigee.io/feed/mp3).
 - **tagesschau in 100 Sekunden** — latest episode of the
   [podcast feed](https://www.tagesschau.de/multimedia/sendung/tagesschau_in_100_sekunden/).
-- **Jingles** — optional intro, outro, and between-track jingles dropped into
-  `jingles/intro`, `jingles/outro`, and `jingles/random` (`.wav` only; a folder
-  with no `.wav` files is simply skipped).
+- **Jingles** — optional `.wav` jingles dropped into the `jingles/` folders,
+  each played at a different spot in the loop:
+  - `jingles/intro` — once at the start
+  - `jingles/random` — between tracks
+  - `jingles/outro` — once at the end
+  - `jingles/always` — (almost) before every track
+
+  Any folder with no `.wav` files is simply skipped.
 
 Generated audio is written under `data/YYYYMMDD/`. The weather greeting is only
 created once per day, and date folders older than 7 days are cleaned up
@@ -71,7 +80,13 @@ make check       # run ruff and mypy
 
 `make webserver` starts the streaming server. The web page polls until the
 day's audio is ready, then plays the playlist (jingles, weather, news) on a
-loop with pause and skip controls.
+loop with pause and skip controls:
+
+<!-- markdownlint-disable MD033 -->
+<p align="center">
+<img src="screenshot.png" alt="screenshot" width="800"/>
+</p>
+<!-- markdownlint-enable MD033 -->
 
 The image is tagged with the current version, derived from the latest git tag
 via `git describe` (semver, `v` prefix stripped). The version is shown in the

@@ -20,7 +20,7 @@ _state_lock = threading.Lock()
 
 _RADIO_PNG = Path(__file__).parent.parent / "radio.png"
 _JINGLES_ROOT = Path(__file__).parent.parent / "jingles"
-_JINGLE_CATEGORIES = ("intro", "random", "outro")
+_JINGLE_CATEGORIES = ("intro", "random", "outro", "always")
 
 _HTML = """\
 <!DOCTYPE html>
@@ -228,17 +228,20 @@ def jingle(category: str):  # type: ignore[return]
 def api_playlist() -> Response:
     """Ordered playlist with optional jingles inserted (omitted when a folder has no .wav)."""
     tracks: list[dict[str, object]] = []
-    if _jingle_files("intro"):
-        tracks.append({"src": "/audio/jingle/intro", "name": "jingle", "jingle": True})
+
+    def add_jingle(category: str) -> None:
+        if _jingle_files(category):
+            tracks.append({"src": f"/audio/jingle/{category}", "name": "jingle", "jingle": True})
+
+    add_jingle("always")
+    add_jingle("intro")
     tracks.append({"src": "/audio/weather", "name": "weather"})
-    if _jingle_files("random"):
-        tracks.append({"src": "/audio/jingle/random", "name": "jingle", "jingle": True})
+    add_jingle("random")
     tracks.append({"src": "/audio/heise", "name": "heise"})
-    if _jingle_files("random"):
-        tracks.append({"src": "/audio/jingle/random", "name": "jingle", "jingle": True})
+    add_jingle("always")
+    add_jingle("random")
     tracks.append({"src": "/audio/tagesschau", "name": "tagesschau"})
-    if _jingle_files("outro"):
-        tracks.append({"src": "/audio/jingle/outro", "name": "jingle", "jingle": True})
+    add_jingle("outro")
     return jsonify({"tracks": tracks})
 
 
