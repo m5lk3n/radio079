@@ -11,6 +11,12 @@ _tz_name = _tf.timezone_at(
     lat=float(os.environ["WEATHER_LOCATION_LAT"]),
     lng=float(os.environ["WEATHER_LOCATION_LON"]),
 )
+if _tz_name is None:
+    raise RuntimeError(
+        "Could not determine timezone for "
+        f"WEATHER_LOCATION_LAT={os.environ['WEATHER_LOCATION_LAT']}, "
+        f"WEATHER_LOCATION_LON={os.environ['WEATHER_LOCATION_LON']}"
+    )
 _LOCAL_TZ = ZoneInfo(_tz_name)
 _DATA_ROOT = Path("/app/data")
 _DATE_DIR = _DATA_ROOT / datetime.now(_LOCAL_TZ).strftime("%Y%m%d")

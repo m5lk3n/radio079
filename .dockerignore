@@ -6,10 +6,10 @@
 .claude
 
 data/
-tts/
-scripts/
-
 docs/
+scripts/
+tts/
+
 *.bak
 todo.cfg
 

@@ -2,7 +2,7 @@ import random
 import threading
 from pathlib import Path
 
-from flask import Flask, jsonify, send_file
+from flask import Flask, Response, jsonify, send_file
 
 from config import HEISE_PODCAST_WAV, TAGESSCHAU_PODCAST_WAV, WEATHER_WAV
 from heise.fetch_podcast import fetch_heise_podcast
@@ -211,7 +211,7 @@ def jingle(category: str):  # type: ignore[return]
 
 
 @app.route("/api/playlist")
-def api_playlist():  # type: ignore[return]
+def api_playlist() -> Response:
     """Ordered playlist with optional jingles inserted (omitted when a folder has no .wav)."""
     tracks: list[dict[str, object]] = []
     if _jingle_files("intro"):

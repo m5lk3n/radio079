@@ -38,5 +38,5 @@
 ---
 
 <p align="center">
-    <a href="https://lttl.dev/"><img alt="lttl.dev logo" src="./assets/images/logo.png" width="25%"/></a>
+    <a href="https://lttl.dev/"><img alt="lttl.dev logo" src="logo.png" width="25%"/></a>
 </p>
