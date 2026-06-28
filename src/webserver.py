@@ -1,3 +1,4 @@
+import random
 import threading
 from pathlib import Path
 
@@ -16,6 +17,8 @@ _state: dict[str, str] = {"phase": "creating"}
 _state_lock = threading.Lock()
 
 _RADIO_PNG = Path(__file__).parent.parent / "radio.png"
+_JINGLES_ROOT = Path(__file__).parent.parent / "jingles"
+_JINGLE_CATEGORIES = ("intro", "random", "outro")
 
 _HTML = """\
 <!DOCTYPE html>
@@ -73,11 +76,7 @@ _HTML = """\
   </div>
   <audio id="player"></audio>
   <script>
-    const tracks = [
-      { src: '/audio/weather', name: 'weather' },
-      { src: '/audio/heise', name: 'heise' },
-      { src: '/audio/tagesschau', name: 'tagesschau' },
-    ];
+    let tracks = [];
     let idx = 0;
     let started = false;
     const player = document.getElementById('player');
@@ -106,11 +105,13 @@ _HTML = """\
 
     function playNext() {
       if (gapTimer) { clearTimeout(gapTimer); gapTimer = null; }
+      if (!tracks.length) return;
       const t = tracks[idx];
       idx = (idx + 1) % tracks.length;
       statusEl.className = 'streaming';
       statusEl.textContent = 'now streaming: ' + t.name;
-      player.src = t.src;
+      // cache-buster so jingles get a fresh random pick each loop
+      player.src = t.jingle ? t.src + '?_=' + Date.now() : t.src;
       player.play().catch(console.error);
     }
 
@@ -125,9 +126,15 @@ _HTML = """\
           if (data.phase === 'ready') {
             if (!started) {
               started = true;
-              skipEl.disabled = false;
-              pauseEl.disabled = false;
-              playNext();
+              fetch('/api/playlist')
+                .then(r => r.json())
+                .then(p => {
+                  tracks = p.tracks;
+                  skipEl.disabled = false;
+                  pauseEl.disabled = false;
+                  playNext();
+                })
+                .catch(() => { started = false; setTimeout(poll, 2000); });
             }
           } else {
             statusEl.textContent = 'creating latest audio...';
@@ -181,6 +188,44 @@ def audio(source: str):  # type: ignore[return]
     if not path or not Path(path).exists():
         return "Not found", 404
     return send_file(path, mimetype="audio/wav", conditional=True)
+
+
+def _jingle_files(category: str) -> list[Path]:
+    """Return the .wav files in a jingle category folder (only .wav is supported)."""
+    folder = _JINGLES_ROOT / category
+    if not folder.is_dir():
+        return []
+    return sorted(folder.glob("*.wav"))
+
+
+@app.route("/audio/jingle/<category>")
+def jingle(category: str):  # type: ignore[return]
+    if category not in _JINGLE_CATEGORIES:
+        return "Not found", 404
+    files = _jingle_files(category)
+    if not files:
+        return "Not found", 404
+    resp = send_file(str(random.choice(files)), mimetype="audio/wav", conditional=False)
+    resp.headers["Cache-Control"] = "no-store"  # pick a fresh random jingle each loop
+    return resp
+
+
+@app.route("/api/playlist")
+def api_playlist():  # type: ignore[return]
+    """Ordered playlist with optional jingles inserted (omitted when a folder has no .wav)."""
+    tracks: list[dict[str, object]] = []
+    if _jingle_files("intro"):
+        tracks.append({"src": "/audio/jingle/intro", "name": "jingle", "jingle": True})
+    tracks.append({"src": "/audio/weather", "name": "weather"})
+    if _jingle_files("random"):
+        tracks.append({"src": "/audio/jingle/random", "name": "jingle", "jingle": True})
+    tracks.append({"src": "/audio/heise", "name": "heise"})
+    if _jingle_files("random"):
+        tracks.append({"src": "/audio/jingle/random", "name": "jingle", "jingle": True})
+    tracks.append({"src": "/audio/tagesschau", "name": "tagesschau"})
+    if _jingle_files("outro"):
+        tracks.append({"src": "/audio/jingle/outro", "name": "jingle", "jingle": True})
+    return jsonify({"tracks": tracks})
 
 
 @app.route("/api/status")

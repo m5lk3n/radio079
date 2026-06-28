@@ -15,3 +15,4 @@ x 2026-06-27 support https://www.tagesschau.de/tagesschau_in_100_sekunden/podcas
 x 2026-06-28 add fetch retry
 x 2026-06-28 add a 'now playing' website using GH's :radio: as favicon 
 x 2026-06-28 add pause between stories
+x 2026-06-28 add jingles

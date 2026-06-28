@@ -10,5 +10,4 @@ rename OPENAI_ to LLM_
 2nd stream with latest episode from https://www.kicker.de/64/podcaststartseite every 30mins (?)
 support https://www.nachrichtenleicht.de/ playing at 1.5x speed (?)
 (C) make AI optional
-(A) add jingles
 (D) support semver

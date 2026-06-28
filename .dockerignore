@@ -5,13 +5,13 @@
 # Environment & secrets
 .env
 
-# Claude Code
+# AI
 .claude
+cartesia/
 
 # Local data and generated output
 data/
 tts/
-jingles/
 snippets/
 
 # Docs and scratch files
