@@ -1,6 +1,8 @@
+import contextlib
 import html
 import random
 import threading
+import wave
 from pathlib import Path
 
 from flask import Flask, Response, jsonify, send_file
@@ -23,6 +25,7 @@ _state_lock = threading.Lock()
 _RADIO_PNG = Path(__file__).parent.parent / "radio.png"
 _JINGLES_ROOT = Path(__file__).parent.parent / "jingles"
 _JINGLE_CATEGORIES = ("intro", "random", "outro", "always", "failure")
+_GAP_SECONDS = 1.0  # pause between tracks
 
 _AUDIO_PATHS: dict[str, str] = {
     "weather": WEATHER_WAV,
@@ -56,6 +59,7 @@ _HTML = """\
   #status { font-size: 0.9rem; color: #555; letter-spacing: 0.1rem; }
   #status.streaming { color: #44aaff; }
   #status.failed { color: #cc4444; }
+  #rotationLen { font-size: 0.75rem; color: #555; letter-spacing: 0.1rem; }
   #controls { display: flex; gap: 1rem; }
   .btn {
     font-family: inherit;
@@ -157,15 +161,18 @@ _HTML = """\
     </svg>
     <div id="rotation"></div>
   </div>
+  <p id="rotationLen">&mdash;</p>
   <audio id="player"></audio>
   <footer>v__VERSION__</footer>
   <script>
+    const GAP_MS = __GAP_MS__;
     let tracks = [];
     let idx = 0;
     let started = false;
     const player = document.getElementById('player');
     const statusEl = document.getElementById('status');
     const rotationEl = document.getElementById('rotation');
+    const rotationLenEl = document.getElementById('rotationLen');
     const rotationWrap = document.getElementById('rotationWrap');
     const loopPath = document.getElementById('loopPath');
     const skipEl = document.getElementById('skip');
@@ -234,6 +241,15 @@ _HTML = """\
 
     window.addEventListener('resize', drawLoopArrow);
 
+    // jingles are picked at random each loop, so the length is approximate
+    function showRotationLength(total) {
+      if (!total) { rotationLenEl.textContent = ''; return; }
+      const secs = Math.round(total);
+      const m = Math.floor(secs / 60);
+      const s = String(secs % 60).padStart(2, '0');
+      rotationLenEl.textContent = '≈ ' + m + ':' + s + ' per rotation';
+    }
+
     function highlightRotation(current) {
       segs.forEach((seg, i) => seg.classList.toggle('active', i === current));
     }
@@ -257,9 +273,9 @@ _HTML = """\
       player.play().catch(console.error);
     }
 
-    // one second pause between tracks
-    player.addEventListener('ended', () => { gapTimer = setTimeout(playNext, 1000); });
-    player.addEventListener('error', () => { gapTimer = setTimeout(playNext, 1000); });
+    // pause between tracks
+    player.addEventListener('ended', () => { gapTimer = setTimeout(playNext, GAP_MS); });
+    player.addEventListener('error', () => { gapTimer = setTimeout(playNext, GAP_MS); });
 
     function poll() {
       fetch('/api/status')
@@ -273,6 +289,7 @@ _HTML = """\
                 .then(p => {
                   tracks = p.tracks;
                   buildRotation();
+                  showRotationLength(p.total);
                   skipEl.disabled = false;
                   pauseEl.disabled = false;
                   playNext();
@@ -293,6 +310,7 @@ _HTML = """\
 </html>"""
 
 _HTML = _HTML.replace("__VERSION__", html.escape(VERSION))
+_HTML = _HTML.replace("__GAP_MS__", str(int(_GAP_SECONDS * 1000)))
 
 
 def _generate() -> None:
@@ -348,6 +366,23 @@ def _jingle_files(category: str) -> list[Path]:
     return sorted(folder.glob("*.wav"))
 
 
+def _wav_duration(path: str | Path) -> float:
+    """Length of a WAV in seconds, or 0.0 if it can't be read."""
+    with contextlib.suppress(Exception), wave.open(str(path), "rb") as w:
+        rate = w.getframerate()
+        if rate:
+            return w.getnframes() / rate
+    return 0.0
+
+
+def _jingle_avg_duration(category: str) -> float:
+    """Average length of a category's jingles; jingles are picked at random each loop."""
+    files = _jingle_files(category)
+    if not files:
+        return 0.0
+    return sum(_wav_duration(f) for f in files) / len(files)
+
+
 @app.route("/audio/jingle/<category>")
 def jingle(category: str):  # type: ignore[return]
     if category not in _JINGLE_CATEGORIES:
@@ -369,14 +404,25 @@ def api_playlist() -> Response:
 
     def add_jingle(category: str) -> None:
         if _jingle_files(category):
-            tracks.append({"src": f"/audio/jingle/{category}", "name": "jingle", "jingle": True})
+            tracks.append({
+                "src": f"/audio/jingle/{category}",
+                "name": "jingle",
+                "jingle": True,
+                # random pick each loop, so the rotation length is an estimate
+                "dur": _jingle_avg_duration(category),
+            })
 
     def add_source(name: str) -> None:
         if name in failures:
             # source unavailable: play a random failure jingle in its place and flag it
-            tracks.append({"src": "/audio/jingle/failure", "name": name, "failed": True})
+            tracks.append({
+                "src": "/audio/jingle/failure",
+                "name": name,
+                "failed": True,
+                "dur": _jingle_avg_duration("failure"),
+            })
         else:
-            tracks.append({"src": f"/audio/{name}", "name": name})
+            tracks.append({"src": f"/audio/{name}", "name": name, "dur": _wav_duration(_AUDIO_PATHS[name])})
 
     add_jingle("always")
     add_jingle("intro")
@@ -387,7 +433,10 @@ def api_playlist() -> Response:
     add_jingle("random")
     add_source("tagesschau")
     add_jingle("outro")
-    return jsonify({"tracks": tracks})
+
+    # one rotation = every track plus the 1 s gap that follows each before the loop repeats
+    total = sum(float(t["dur"]) for t in tracks) + len(tracks) * _GAP_SECONDS
+    return jsonify({"tracks": tracks, "total": total})
 
 
 @app.route("/api/status")
