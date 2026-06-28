@@ -12,6 +12,11 @@ help:
 	@echo
 	@sed -n 's/^##//p' ${MAKEFILE_LIST} | column -t -s ':' | sed -e 's/^/ /'
 
+
+.PHONY: needs_aplay
+needs_aplay:
+	@command -v aplay >/dev/null 2>&1 || { echo >&2 "error: aplay is required to play the generated audio. Please install alsa-utils."; exit
+
 ## build: build the docker image
 .PHONY: build
 build:
@@ -41,11 +46,21 @@ shell: build
 		-v $(DATA):/app/data \
 		--entrypoint bash $(IMAGE)
 
-## play: play the generated audio on the local machine
+## webserver: start the web streaming server on port 8079
+.PHONY: webserver
+webserver: build
+	docker run --rm \
+		--env-file .env \
+		-v $(TTS):/app/tts:ro \
+		-v $(DATA):/app/data \
+		-p 8079:8079 \
+		$(IMAGE) --webserver
+
+## play: play the generated audio on the local machine, without jingles, using aplay
 .PHONY: play
-play:
+play: needs_aplay
 	aplay data/$$(date +%Y%m%d)/weather/weather.wav
-	aplay data/$$(date +%Y%m%d)/swr3/podcast.wav
+	aplay data/$$(date +%Y%m%d)/heise/podcast.wav
 	aplay data/$$(date +%Y%m%d)/tagesschau/podcast.wav
 	
 ## dev: run the application in development mode, mounting the source code for live editing

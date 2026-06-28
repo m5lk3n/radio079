@@ -1,13 +1,14 @@
-(C) record/generate and add spoken jingles
+record/generate and add spoken jingles
 (B) add failure handling
 (D) update README
 (B) pre-record and play an error for failed audio generation
 (E) tag the container image properly
 (E) prefix radio079 with my dev domain
 (E) create a .env.example
-(B) add pause between stories
-(E) add a 'now playing' website using GH's :radio: as favicon 
 rename CARTESIA_API_KEY to TTS_API_KEY
 rename OPENAI_ to LLM_
 2nd stream with latest episode from https://www.kicker.de/64/podcaststartseite every 30mins (?)
 support https://www.nachrichtenleicht.de/ playing at 1.5x speed (?)
+(C) make AI optional
+(A) add jingles
+(D) support semver

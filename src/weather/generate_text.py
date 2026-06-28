@@ -52,6 +52,7 @@ Wetterdaten für heute ({date}):
 Tonvorgabe: Passe deine Stimmung dem Wetter an — bei schönem Wetter lebhaft und fröhlich, bei Regen oder schlechtem Wetter eher nachdenklich oder gemütlich.
 Kein Intro — fang direkt mit einer stimmungsvollen Aussage an.
 Keine Aufzählungen, fließender Text.
+Verwende informelle Sprache, als würdest du mit einem Freund sprechen.
 Kein Wechsel der Sprache, bleibe durchgehend auf Deutsch.
 """
 

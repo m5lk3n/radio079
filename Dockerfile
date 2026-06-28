@@ -11,5 +11,8 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY src/ ./src/
+COPY radio.png .
+
+EXPOSE 8079
 
 ENTRYPOINT ["python", "src/main.py"]

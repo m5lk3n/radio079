@@ -2,11 +2,20 @@
 
 :construction:
 
-<h1 align="center">radio 0 7 9</h1>
-
 <p align="center">
 <img src="radio.png" alt="Radio"/>
 </p>
+
+<h1 align="center" style="font-family: 'Courier New', monospace;">radio 0 7 9</h1>
+
+## Requirements
+
+- Docker
+- OpenAI (compatible) provider data:
+  - API key
+  - API URL
+  - provider LLM name
+- Cartesia (to create weather)
 
 ## Bookmarks
 
