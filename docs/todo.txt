@@ -3,8 +3,6 @@ record/generate and add spoken jingles
 (D) update README
 (B) pre-record and play an error for failed audio generation
 (E) tag the container image properly
-(E) prefix radio079 with my dev domain
-(E) create a .env.example
 rename OPENAI_ to LLM_
 2nd stream with latest episode from https://www.kicker.de/64/podcaststartseite every 30mins (?)
 support https://www.nachrichtenleicht.de/ playing at 1.5x speed (?)

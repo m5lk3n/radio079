@@ -17,3 +17,4 @@ x 2026-06-28 add a 'now playing' website using GH's :radio: as favicon
 x 2026-06-28 add pause between stories
 x 2026-06-28 add jingles
 x 2026-06-28 rename CARTESIA_API_KEY to TTS_API_KEY
+x 2026-06-28 create a .env.example
