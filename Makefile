@@ -23,14 +23,19 @@ needs_aplay:
 .PHONY: build
 build:
 	DOCKER_BUILDKIT=1 docker build \
+		--target runtime \
 		--build-arg VERSION=$(VERSION) \
 		-t $(IMAGE):$(VERSION) .
 
 ## check: run code quality checks
 .PHONY: check
-check: build
-	docker run --rm --entrypoint ruff $(IMAGE):$(VERSION) check src/
-	docker run --rm --entrypoint mypy $(IMAGE):$(VERSION) --ignore-missing-imports src/
+check:
+	DOCKER_BUILDKIT=1 docker build \
+		--target dev \
+		--build-arg VERSION=$(VERSION) \
+		-t $(IMAGE):$(VERSION)-dev .
+	docker run --rm --entrypoint ruff $(IMAGE):$(VERSION)-dev check src/
+	docker run --rm --entrypoint mypy $(IMAGE):$(VERSION)-dev --ignore-missing-imports src/
 
 ## run: start the application as a container, generating the podcast audio in the data directory
 .PHONY: run

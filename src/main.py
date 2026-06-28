@@ -20,7 +20,7 @@ def main() -> None:
         return
 
     if Path(WEATHER_WAV).exists():
-        print(f"Weather already generated today, skipping ({WEATHER_WAV})")
+        print("Weather already up to date")
     else:
         fetch_weather_data()
         generate_weather_text()

@@ -66,6 +66,39 @@ _HTML = """\
   .btn:hover:not(:disabled) { border-color: #44aaff; color: #44aaff; }
   .btn:disabled { opacity: 0.3; cursor: default; }
   .btn .icon { font-size: 1rem; line-height: 1; }
+  #rotation {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5rem;
+    min-height: 2.5rem;
+  }
+  .seg {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .seg .dot {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    border: 1px solid #444;
+    background: transparent;
+    transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+  }
+  .seg.jingle .dot { width: 0.4rem; height: 0.4rem; }
+  .seg .label {
+    font-size: 0.6rem;
+    letter-spacing: 0.05rem;
+    color: #555;
+    transition: color 0.3s;
+  }
+  .seg.active .dot {
+    background: #44aaff;
+    border-color: #44aaff;
+    box-shadow: 0 0 0.5rem #44aaff;
+  }
+  .seg.active .label { color: #44aaff; }
   footer {
     position: fixed;
     bottom: 0.75rem;
@@ -85,6 +118,7 @@ _HTML = """\
     <button id="pause" class="btn" disabled><span class="icon" id="pauseIcon">&#9208;</span><span id="pauseLabel">pause</span></button>
     <button id="skip" class="btn" disabled><span class="icon">&#9197;</span>skip to next</button>
   </div>
+  <div id="rotation"></div>
   <audio id="player"></audio>
   <footer>v__VERSION__</footer>
   <script>
@@ -93,6 +127,7 @@ _HTML = """\
     let started = false;
     const player = document.getElementById('player');
     const statusEl = document.getElementById('status');
+    const rotationEl = document.getElementById('rotation');
     const skipEl = document.getElementById('skip');
     const pauseEl = document.getElementById('pause');
     const pauseIcon = document.getElementById('pauseIcon');
@@ -114,12 +149,39 @@ _HTML = """\
     });
 
     let gapTimer = null;
+    let segs = [];
+
+    function buildRotation() {
+      rotationEl.innerHTML = '';
+      segs = tracks.map(t => {
+        const seg = document.createElement('div');
+        seg.className = 'seg' + (t.jingle ? ' jingle' : '');
+        seg.title = t.name;
+        const dot = document.createElement('div');
+        dot.className = 'dot';
+        seg.appendChild(dot);
+        if (!t.jingle) {
+          const label = document.createElement('div');
+          label.className = 'label';
+          label.textContent = t.name;
+          seg.appendChild(label);
+        }
+        rotationEl.appendChild(seg);
+        return seg;
+      });
+    }
+
+    function highlightRotation(current) {
+      segs.forEach((seg, i) => seg.classList.toggle('active', i === current));
+    }
 
     function playNext() {
       if (gapTimer) { clearTimeout(gapTimer); gapTimer = null; }
       if (!tracks.length) return;
+      const current = idx;
       const t = tracks[idx];
       idx = (idx + 1) % tracks.length;
+      highlightRotation(current);
       statusEl.className = 'streaming';
       statusEl.textContent = 'now streaming: ' + t.name;
       // cache-buster so jingles get a fresh random pick each loop
@@ -142,6 +204,7 @@ _HTML = """\
                 .then(r => r.json())
                 .then(p => {
                   tracks = p.tracks;
+                  buildRotation();
                   skipEl.disabled = false;
                   pauseEl.disabled = false;
                   playNext();
