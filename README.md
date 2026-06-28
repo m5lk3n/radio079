@@ -84,7 +84,7 @@ loop with pause and skip controls:
 
 <!-- markdownlint-disable MD033 -->
 <p align="center">
-<img src="screenshot.png" alt="screenshot" width="800"/>
+<img src="screenshot.png" alt="screenshot" height="799"/>
 </p>
 <!-- markdownlint-enable MD033 -->
 
