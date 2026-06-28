@@ -23,11 +23,11 @@ into a continuous stream, served from a minimal "now playing" web page.
   turned into a short, mood-matched German greeting by an OpenAI-compatible LLM,
   then voiced with [Cartesia](https://cartesia.ai/) text-to-speech. The voice is
   picked at random and the emotion follows the forecast (cheerful in fair
-  weather, more subdued in bad weather). :DE:
+  weather, more subdued in bad weather).
 - **heise kurz informiert** — latest episode of the
-  [podcast feed](https://kurzinformiert.podigee.io/feed/mp3). :DE:
+  [podcast feed](https://kurzinformiert.podigee.io/feed/mp3).
 - **tagesschau in 100 Sekunden** — latest episode of the
-  [podcast feed](https://www.tagesschau.de/multimedia/sendung/tagesschau_in_100_sekunden/). :DE:
+  [podcast feed](https://www.tagesschau.de/multimedia/sendung/tagesschau_in_100_sekunden/).
 - **Jingles** — optional `.wav` jingles dropped into the `jingles/` folders,
   each played at a different spot in the loop:
   - `jingles/intro` — once at the start
@@ -86,7 +86,7 @@ loop with pause and skip controls:
 
 <!-- markdownlint-disable MD033 -->
 <p align="center">
-<img src="screenshot.png" alt="screenshot" height="799"/>
+<img src="screenshot.png" alt="screenshot" width="800"/>
 </p>
 <!-- markdownlint-enable MD033 -->
 
