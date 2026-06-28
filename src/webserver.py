@@ -1,3 +1,4 @@
+import html
 import random
 import threading
 from pathlib import Path
@@ -10,6 +11,7 @@ from tagesschau.fetch_podcast import fetch_tagesschau_podcast
 from weather.fetch_data import fetch_weather_data
 from weather.generate_greeting_audio import generate_today_greeting_weather_audio
 from weather.generate_text import generate_weather_text
+from version import VERSION
 
 app = Flask(__name__)
 
@@ -64,6 +66,15 @@ _HTML = """\
   .btn:hover:not(:disabled) { border-color: #44aaff; color: #44aaff; }
   .btn:disabled { opacity: 0.3; cursor: default; }
   .btn .icon { font-size: 1rem; line-height: 1; }
+  footer {
+    position: fixed;
+    bottom: 0.75rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.1rem;
+    color: #444;
+  }
+  footer a { color: inherit; text-decoration: none; }
+  footer a:hover { color: #44aaff; }
 </style>
 </head>
 <body>
@@ -75,6 +86,7 @@ _HTML = """\
     <button id="skip" class="btn" disabled><span class="icon">&#9197;</span>skip to next</button>
   </div>
   <audio id="player"></audio>
+  <footer>v__VERSION__</footer>
   <script>
     let tracks = [];
     let idx = 0;
@@ -148,6 +160,8 @@ _HTML = """\
   </script>
 </body>
 </html>"""
+
+_HTML = _HTML.replace("__VERSION__", html.escape(VERSION))
 
 
 def _generate() -> None:

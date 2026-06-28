@@ -1,7 +1,9 @@
-IMAGE := radio079
+IMAGE := lttl.dev/radio079
 SRC   := $(shell pwd)/src
 TTS   := $(shell pwd)/tts
 DATA  := $(shell pwd)/data
+# grab the latest git tag, remove the 'v' prefix if present, and handle dirty/dev commits
+VERSION ?= $(shell git describe --tags --always --dirty | sed 's/^v//')
 
 ## help: print this help message
 .PHONY: help
@@ -20,13 +22,15 @@ needs_aplay:
 ## build: build the docker image
 .PHONY: build
 build:
-	DOCKER_BUILDKIT=1 docker build -t $(IMAGE) .
+	DOCKER_BUILDKIT=1 docker build \
+		--build-arg VERSION=$(VERSION) \
+		-t $(IMAGE):$(VERSION) .
 
 ## check: run code quality checks
 .PHONY: check
 check: build
-	docker run --rm --entrypoint ruff $(IMAGE) check src/
-	docker run --rm --entrypoint mypy $(IMAGE) --ignore-missing-imports src/
+	docker run --rm --entrypoint ruff $(IMAGE):$(VERSION) check src/
+	docker run --rm --entrypoint mypy $(IMAGE):$(VERSION) --ignore-missing-imports src/
 
 ## run: start the application as a container, generating the podcast audio in the data directory
 .PHONY: run
@@ -35,7 +39,7 @@ run: build
 		--env-file .env \
 		-v $(TTS):/app/tts:ro \
 		-v $(DATA):/app/data \
-		$(IMAGE)
+		$(IMAGE):$(VERSION)
 
 ## shell: run a shell in the container
 .PHONY: shell
@@ -44,7 +48,7 @@ shell: build
 		--env-file .env \
 		-v $(TTS):/app/tts:ro \
 		-v $(DATA):/app/data \
-		--entrypoint bash $(IMAGE)
+		--entrypoint bash $(IMAGE):$(VERSION)
 
 ## webserver: start the web streaming server on port 8079
 .PHONY: webserver
@@ -54,7 +58,7 @@ webserver: build
 		-v $(TTS):/app/tts:ro \
 		-v $(DATA):/app/data \
 		-p 8079:8079 \
-		$(IMAGE) --webserver
+		$(IMAGE):$(VERSION) --webserver
 
 ## play: play the generated audio on the local machine, without jingles, using aplay
 .PHONY: play
@@ -71,4 +75,4 @@ dev: build
 		-v $(SRC):/app/src \
 		-v $(TTS):/app/tts:ro \
 		-v $(DATA):/app/data \
-		--entrypoint bash $(IMAGE)
+		--entrypoint bash $(IMAGE):$(VERSION)

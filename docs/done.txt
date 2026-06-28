@@ -18,3 +18,6 @@ x 2026-06-28 add pause between stories
 x 2026-06-28 add jingles
 x 2026-06-28 rename CARTESIA_API_KEY to TTS_API_KEY
 x 2026-06-28 create a .env.example
+x 2026-06-28 support semver
+x 2026-06-28 tag the container image properly
+x 2026-06-28 update README

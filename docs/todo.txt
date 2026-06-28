@@ -1,10 +1,8 @@
-record/generate and add spoken jingles
-(B) add failure handling
-(D) update README
-(B) pre-record and play an error for failed audio generation
-(E) tag the container image properly
-rename OPENAI_ to LLM_
+(B) record/generate and add spoken jingles
+(A) add failure handling
+(A) pre-record and play an error for failed audio generation
+rename OPENAI_ to LLM_ (?) (requires README update)
 2nd stream with latest episode from https://www.kicker.de/64/podcaststartseite every 30mins (?)
 support https://www.nachrichtenleicht.de/ playing at 1.5x speed (?)
 (C) make AI optional
-(D) support semver
+add an easter egg (?)
