@@ -23,17 +23,19 @@ into a continuous stream, served from a minimal "now playing" web page.
   turned into a short, mood-matched German greeting by an OpenAI-compatible LLM,
   then voiced with [Cartesia](https://cartesia.ai/) text-to-speech. The voice is
   picked at random and the emotion follows the forecast (cheerful in fair
-  weather, more subdued in bad weather).
+  weather, more subdued in bad weather). :DE:
 - **heise kurz informiert** — latest episode of the
-  [podcast feed](https://kurzinformiert.podigee.io/feed/mp3).
+  [podcast feed](https://kurzinformiert.podigee.io/feed/mp3). :DE:
 - **tagesschau in 100 Sekunden** — latest episode of the
-  [podcast feed](https://www.tagesschau.de/multimedia/sendung/tagesschau_in_100_sekunden/).
+  [podcast feed](https://www.tagesschau.de/multimedia/sendung/tagesschau_in_100_sekunden/). :DE:
 - **Jingles** — optional `.wav` jingles dropped into the `jingles/` folders,
   each played at a different spot in the loop:
   - `jingles/intro` — once at the start
   - `jingles/random` — between tracks
   - `jingles/outro` — once at the end
   - `jingles/always` — (almost) before every track
+  - `jingles/failure` — in place of the weather, heise, or tagesschau slot
+    whenever that data can't be fetched (the web page flags the slot in red)
 
   Any folder with no `.wav` files is simply skipped.
 
@@ -88,7 +90,7 @@ loop with pause and skip controls:
 </p>
 <!-- markdownlint-enable MD033 -->
 
-The image is tagged with the current version, derived from the latest git tag
+The Docker image is tagged with the current version, derived from the latest git tag
 via `git describe` (semver, `v` prefix stripped). The version is shown in the
 web page footer.
 
@@ -106,6 +108,7 @@ web page footer.
 
 ## Disclaimer
 
+- This is strictly non-commercial!
 - I used Claude and ChatGPT to realize this project.
 - I don't speak Python, I don't like Python.
 - I'm not responsible for external links.

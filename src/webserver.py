@@ -16,11 +16,19 @@ from version import VERSION
 app = Flask(__name__)
 
 _state: dict[str, str] = {"phase": "creating"}
+# sources whose audio could not be fetched/generated; replaced by a failure jingle
+_failures: set[str] = set()
 _state_lock = threading.Lock()
 
 _RADIO_PNG = Path(__file__).parent.parent / "radio.png"
 _JINGLES_ROOT = Path(__file__).parent.parent / "jingles"
-_JINGLE_CATEGORIES = ("intro", "random", "outro", "always")
+_JINGLE_CATEGORIES = ("intro", "random", "outro", "always", "failure")
+
+_AUDIO_PATHS: dict[str, str] = {
+    "weather": WEATHER_WAV,
+    "heise": HEISE_PODCAST_WAV,
+    "tagesschau": TAGESSCHAU_PODCAST_WAV,
+}
 
 _HTML = """\
 <!DOCTYPE html>
@@ -47,6 +55,7 @@ _HTML = """\
   h1 { font-size: 3rem; font-weight: normal; letter-spacing: 1rem; color: #fff; }
   #status { font-size: 0.9rem; color: #555; letter-spacing: 0.1rem; }
   #status.streaming { color: #44aaff; }
+  #status.failed { color: #cc4444; }
   #controls { display: flex; gap: 1rem; }
   .btn {
     font-family: inherit;
@@ -110,6 +119,14 @@ _HTML = """\
     box-shadow: 0 0 0.5rem #44aaff;
   }
   .seg.active .label { color: #44aaff; }
+  .seg.failed .dot { border-color: #cc4444; }
+  .seg.failed .label { color: #cc4444; }
+  .seg.failed.active .dot {
+    background: #cc4444;
+    border-color: #cc4444;
+    box-shadow: 0 0 0.5rem #cc4444;
+  }
+  .seg.failed.active .label { color: #cc4444; }
   footer {
     position: fixed;
     bottom: 0.75rem;
@@ -178,7 +195,7 @@ _HTML = """\
       rotationEl.innerHTML = '';
       segs = tracks.map(t => {
         const seg = document.createElement('div');
-        seg.className = 'seg' + (t.jingle ? ' jingle' : '');
+        seg.className = 'seg' + (t.jingle ? ' jingle' : '') + (t.failed ? ' failed' : '');
         seg.title = t.name;
         const dot = document.createElement('div');
         dot.className = 'dot';
@@ -228,10 +245,15 @@ _HTML = """\
       const t = tracks[idx];
       idx = (idx + 1) % tracks.length;
       highlightRotation(current);
-      statusEl.className = 'streaming';
-      statusEl.textContent = 'now streaming: ' + t.name;
-      // cache-buster so jingles get a fresh random pick each loop
-      player.src = t.jingle ? t.src + '?_=' + Date.now() : t.src;
+      if (t.failed) {
+        statusEl.className = 'failed';
+        statusEl.textContent = t.name + ': data unavailable';
+      } else {
+        statusEl.className = 'streaming';
+        statusEl.textContent = 'now streaming: ' + t.name;
+      }
+      // cache-buster so jingles (incl. failure) get a fresh random pick each loop
+      player.src = (t.jingle || t.failed) ? t.src + '?_=' + Date.now() : t.src;
       player.play().catch(console.error);
     }
 
@@ -274,16 +296,28 @@ _HTML = _HTML.replace("__VERSION__", html.escape(VERSION))
 
 
 def _generate() -> None:
-    try:
-        if not Path(WEATHER_WAV).exists():
+    # Each source is fetched independently so one failure does not block the others.
+    if not Path(WEATHER_WAV).exists():
+        try:
             fetch_weather_data()
             generate_weather_text()
             generate_today_greeting_weather_audio()
-        fetch_heise_podcast()
-        fetch_tagesschau_podcast()
-    except Exception as e:
-        print(f"Audio generation error: {e}")
+        except Exception as e:
+            print(f"Weather generation error: {e}")
+    for name, fetch in (("heise", fetch_heise_podcast), ("tagesschau", fetch_tagesschau_podcast)):
+        try:
+            fetch()
+        except Exception as e:
+            print(f"{name} generation error: {e}")
+
+    # A source counts as failed when its WAV is missing after the attempt; the
+    # playlist then substitutes a failure jingle and the page flags it.
+    failed = {name for name, path in _AUDIO_PATHS.items() if not Path(path).exists()}
+    if failed:
+        print(f"Sources unavailable, playing failure jingle for: {sorted(failed)}")
     with _state_lock:
+        _failures.clear()
+        _failures.update(failed)
         _state["phase"] = "ready"
 
 
@@ -296,13 +330,6 @@ def index() -> tuple[str, int, dict[str, str]]:
 @app.route("/favicon.ico")
 def radio_png():  # type: ignore[return]
     return send_file(str(_RADIO_PNG), mimetype="image/png")
-
-
-_AUDIO_PATHS: dict[str, str] = {
-    "weather": WEATHER_WAV,
-    "heise": HEISE_PODCAST_WAV,
-    "tagesschau": TAGESSCHAU_PODCAST_WAV,
-}
 
 
 @app.route("/audio/<source>")
@@ -336,20 +363,29 @@ def jingle(category: str):  # type: ignore[return]
 @app.route("/api/playlist")
 def api_playlist() -> Response:
     """Ordered playlist with optional jingles inserted (omitted when a folder has no .wav)."""
+    with _state_lock:
+        failures = set(_failures)
     tracks: list[dict[str, object]] = []
 
     def add_jingle(category: str) -> None:
         if _jingle_files(category):
             tracks.append({"src": f"/audio/jingle/{category}", "name": "jingle", "jingle": True})
 
+    def add_source(name: str) -> None:
+        if name in failures:
+            # source unavailable: play a random failure jingle in its place and flag it
+            tracks.append({"src": "/audio/jingle/failure", "name": name, "failed": True})
+        else:
+            tracks.append({"src": f"/audio/{name}", "name": name})
+
     add_jingle("always")
     add_jingle("intro")
-    tracks.append({"src": "/audio/weather", "name": "weather"})
+    add_source("weather")
     add_jingle("random")
-    tracks.append({"src": "/audio/heise", "name": "heise"})
+    add_source("heise")
     add_jingle("always")
     add_jingle("random")
-    tracks.append({"src": "/audio/tagesschau", "name": "tagesschau"})
+    add_source("tagesschau")
     add_jingle("outro")
     return jsonify({"tracks": tracks})
 

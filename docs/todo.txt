@@ -1,9 +1,9 @@
-(B) record/generate and add spoken jingles
-(A) add failure handling
-(A) pre-record and play an error for failed audio generation
+record/generate and add spoken jingles (?)
+pre-record and play an error for failed audio generation (?)
 rename OPENAI_ to LLM_ (?) (requires README update)
 2nd stream with latest episode from https://www.kicker.de/64/podcaststartseite every 30mins (?)
 support https://www.nachrichtenleicht.de/ playing at 1.5x speed (?)
-(D) make AI optional
+make AI optional (?)
 add an easter egg (?)
-(C) add bluetooth streaming mode
+(A) add bluetooth streaming mode
+(B) deploy
