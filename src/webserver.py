@@ -4,6 +4,7 @@ import random
 import threading
 import wave
 from pathlib import Path
+from typing import cast
 
 from flask import Flask, Response, jsonify, send_file
 
@@ -435,7 +436,7 @@ def api_playlist() -> Response:
     add_jingle("outro")
 
     # one rotation = every track plus the 1 s gap that follows each before the loop repeats
-    total = sum(float(t["dur"]) for t in tracks) + len(tracks) * _GAP_SECONDS
+    total = sum(cast(float, t["dur"]) for t in tracks) + len(tracks) * _GAP_SECONDS
     return jsonify({"tracks": tracks, "total": total})
 
 
