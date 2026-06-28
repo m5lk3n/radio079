@@ -2,6 +2,7 @@
 
 import json
 import os
+import time
 
 import requests
 
@@ -20,8 +21,21 @@ def fetch_weather_data():
         "forecast_days": 1,
     }
 
-    response = requests.get(_API_URL, params=params, timeout=10)
-    response.raise_for_status()
+    last_exc = None
+    for attempt in range(3):
+        try:
+            response = requests.get(_API_URL, params=params, timeout=10)
+            response.raise_for_status()
+            break
+        except requests.RequestException as e:
+            last_exc = e
+            if attempt < 2:
+                print(f"Weather fetch failed (attempt {attempt + 1}/3): {e}, retrying...")
+                time.sleep(5)
+    else:
+        print(f"Weather fetch failed after 3 attempts: {last_exc}")
+        raise last_exc
+
     data = response.json()
 
     with open(WEATHER_JSON, "w", encoding="utf-8") as f:

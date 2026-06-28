@@ -1,5 +1,4 @@
 (C) record/generate and add spoken jingles
-(B) add fetch retry
 (B) add failure handling
 (D) update README
 (B) pre-record and play an error for failed audio generation

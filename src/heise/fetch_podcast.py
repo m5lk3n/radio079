@@ -3,6 +3,8 @@
 import json
 import os
 import subprocess
+import time
+import urllib.error
 
 import feedparser
 import requests
@@ -16,7 +18,19 @@ from config import (
 
 
 def fetch_heise_podcast():
-    feed = feedparser.parse(HEISE_PODCAST_FEED_URL)
+    last_exc = None
+    for attempt in range(3):
+        feed = feedparser.parse(HEISE_PODCAST_FEED_URL)
+        bozo_exc = feed.get("bozo_exception")
+        if feed.entries or not (bozo_exc and isinstance(bozo_exc, (urllib.error.URLError, OSError))):
+            break
+        last_exc = bozo_exc
+        if attempt < 2:
+            print(f"Feed fetch failed (attempt {attempt + 1}/3): {bozo_exc}, retrying...")
+            time.sleep(5)
+    else:
+        print(f"Failed to fetch heise feed after 3 attempts: {last_exc}")
+        return
 
     if not feed.entries:
         print("No entries in heise podcast feed")
@@ -48,11 +62,23 @@ def fetch_heise_podcast():
     print(f"Downloading heise podcast: {latest.get('title', '')!r}")
     print(f"URL: {enclosure_url}")
 
-    response = requests.get(enclosure_url, stream=True)
-    response.raise_for_status()
-    with open(HEISE_PODCAST_MP3, "wb") as f:
-        for chunk in response.iter_content(chunk_size=65536):
-            f.write(chunk)
+    last_exc = None
+    for attempt in range(3):
+        try:
+            response = requests.get(enclosure_url, stream=True)
+            response.raise_for_status()
+            with open(HEISE_PODCAST_MP3, "wb") as f:
+                for chunk in response.iter_content(chunk_size=65536):
+                    f.write(chunk)
+            break
+        except requests.RequestException as e:
+            last_exc = e
+            if attempt < 2:
+                print(f"Download failed (attempt {attempt + 1}/3): {e}, retrying...")
+                time.sleep(5)
+    else:
+        print(f"Failed to download heise podcast after 3 attempts: {last_exc}")
+        return
 
     subprocess.run(
         [

@@ -12,3 +12,4 @@ x 2026-06-27 remove Golem
 x 2026-06-27 remove SWR3
 x 2026-06-27 migrate Heise to download latest audio from https://kurzinformiert.podigee.io/feed/mp3 (updated morning and afternoon)
 x 2026-06-27 support https://www.tagesschau.de/tagesschau_in_100_sekunden/podcast-ts100-audio-100.html (updated several times per day)
+x 2026-06-28 add fetch retry
