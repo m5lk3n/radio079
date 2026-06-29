@@ -27,6 +27,7 @@ _RADIO_PNG = Path(__file__).parent.parent / "radio.png"
 _JINGLES_ROOT = Path(__file__).parent.parent / "jingles"
 _JINGLE_CATEGORIES = ("intro", "random", "outro", "always", "failure")
 _GAP_SECONDS = 1.0  # pause between tracks
+_OUTRO_EXTRA_GAP_SECONDS = 1.0  # additional pause after the outro before the loop repeats
 
 _AUDIO_PATHS: dict[str, str] = {
     "weather": WEATHER_WAV,
@@ -167,6 +168,7 @@ _HTML = """\
   <footer>v__VERSION__</footer>
   <script>
     const GAP_MS = __GAP_MS__;
+    const OUTRO_EXTRA_GAP_MS = __OUTRO_EXTRA_GAP_MS__;
     let tracks = [];
     let idx = 0;
     let started = false;
@@ -197,6 +199,7 @@ _HTML = """\
     });
 
     let gapTimer = null;
+    let playingIdx = 0;
     let segs = [];
 
     function buildRotation() {
@@ -259,6 +262,7 @@ _HTML = """\
       if (gapTimer) { clearTimeout(gapTimer); gapTimer = null; }
       if (!tracks.length) return;
       const current = idx;
+      playingIdx = current;
       const t = tracks[idx];
       idx = (idx + 1) % tracks.length;
       highlightRotation(current);
@@ -274,9 +278,13 @@ _HTML = """\
       player.play().catch(console.error);
     }
 
-    // pause between tracks
-    player.addEventListener('ended', () => { gapTimer = setTimeout(playNext, GAP_MS); });
-    player.addEventListener('error', () => { gapTimer = setTimeout(playNext, GAP_MS); });
+    // pause between tracks, with an extra pause after the outro before the loop repeats
+    function gapAfterPlaying() {
+      const t = tracks[playingIdx];
+      return GAP_MS + (t && t.outro ? OUTRO_EXTRA_GAP_MS : 0);
+    }
+    player.addEventListener('ended', () => { gapTimer = setTimeout(playNext, gapAfterPlaying()); });
+    player.addEventListener('error', () => { gapTimer = setTimeout(playNext, gapAfterPlaying()); });
 
     function poll() {
       fetch('/api/status')
@@ -312,6 +320,7 @@ _HTML = """\
 
 _HTML = _HTML.replace("__VERSION__", html.escape(VERSION))
 _HTML = _HTML.replace("__GAP_MS__", str(int(_GAP_SECONDS * 1000)))
+_HTML = _HTML.replace("__OUTRO_EXTRA_GAP_MS__", str(int(_OUTRO_EXTRA_GAP_SECONDS * 1000)))
 
 
 def _generate() -> None:
@@ -409,6 +418,8 @@ def api_playlist() -> Response:
                 "src": f"/audio/jingle/{category}",
                 "name": "jingle",
                 "jingle": True,
+                # the outro gets an extra pause before the loop repeats
+                "outro": category == "outro",
                 # random pick each loop, so the rotation length is an estimate
                 "dur": _jingle_avg_duration(category),
             })
@@ -435,8 +446,11 @@ def api_playlist() -> Response:
     add_source("tagesschau")
     add_jingle("outro")
 
-    # one rotation = every track plus the 1 s gap that follows each before the loop repeats
+    # one rotation = every track plus the 1 s gap that follows each before the loop
+    # repeats, with an extra pause after the outro
     total = sum(cast(float, t["dur"]) for t in tracks) + len(tracks) * _GAP_SECONDS
+    if any(t.get("outro") for t in tracks):
+        total += _OUTRO_EXTRA_GAP_SECONDS
     return jsonify({"tracks": tracks, "total": total})
 
 
