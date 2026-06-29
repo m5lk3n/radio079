@@ -6,13 +6,11 @@ import time
 
 import requests
 
-from config import WEATHER_JSON
-
 _API_URL = "https://api.open-meteo.com/v1/forecast"
 
 
-def fetch_weather_data():
-    params = {
+def fetch_weather_data(weather_json: str):
+    params: dict[str, float | int | str] = {
         "latitude": float(os.environ["WEATHER_LOCATION_LAT"]),
         "longitude": float(os.environ["WEATHER_LOCATION_LON"]),
         "current": "temperature_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m",
@@ -34,13 +32,14 @@ def fetch_weather_data():
                 time.sleep(5)
     else:
         print(f"Weather fetch failed after 3 attempts: {last_exc}")
+        assert last_exc is not None
         raise last_exc
 
     data = response.json()
 
-    with open(WEATHER_JSON, "w", encoding="utf-8") as f:
+    with open(weather_json, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
     temp = data["current"]["temperature_2m"]
     code = data["current"]["weather_code"]
-    print(f"Wrote {WEATHER_JSON} (temp={temp}°C, weather_code={code})")
+    print(f"Wrote {weather_json} (temp={temp}°C, weather_code={code})")

@@ -6,11 +6,6 @@ from datetime import date as _date
 
 from openai import OpenAI
 
-from config import (
-    WEATHER_JSON,
-    WEATHER_TEXT_TXT,
-)
-
 # WMO weather interpretation codes as used by Open-Meteo
 _WEATHER_CODES = {
     0: "klarer Himmel",
@@ -57,13 +52,13 @@ Kein Wechsel der Sprache, bleibe durchgehend auf Deutsch.
 """
 
 
-def generate_weather_text():
+def generate_weather_text(weather_json: str, weather_text_txt: str):
     client = OpenAI(
         api_key=os.environ["OPENAI_API_KEY"],
         base_url=os.environ.get("OPENAI_API_BASE_URL"),
     )
 
-    with open(WEATHER_JSON, "r", encoding="utf-8") as f:
+    with open(weather_json, "r", encoding="utf-8") as f:
         data = json.load(f)
 
     current = data["current"]
@@ -89,13 +84,13 @@ def generate_weather_text():
     )
 
     response = client.responses.create(
-        model=os.environ.get("OPENAI_MODEL"),
+        model=os.environ["OPENAI_MODEL"],
         input=prompt,
     )
 
     text = response.output_text
 
-    with open(WEATHER_TEXT_TXT, "w", encoding="utf-8") as f:
+    with open(weather_text_txt, "w", encoding="utf-8") as f:
         f.write(text)
 
-    print(f"Wrote {WEATHER_TEXT_TXT} ({len(text)} chars)")
+    print(f"Wrote {weather_text_txt} ({len(text)} chars)")

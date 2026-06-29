@@ -22,3 +22,4 @@ x 2026-06-28 support semver
 x 2026-06-28 tag the container image properly
 x 2026-06-28 update README
 x 2026-06-28 add failure handling
+x 2026-06-29 suspend over the weekend

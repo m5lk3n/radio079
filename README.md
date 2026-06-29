@@ -43,6 +43,17 @@ Generated audio is written under `data/YYYYMMDD/`. The weather greeting is only
 created once per day, and date folders older than 7 days are cleaned up
 automatically.
 
+The web server keeps running continuously: it refreshes on startup and then
+re-checks the podcast feeds **every hour**, picking up new episodes as they are
+published (the weather greeting is still generated only once per day). No
+restart is needed — the container can run for weeks and rolls over to a new
+`data/YYYYMMDD/` folder at midnight on its own.
+
+On Saturdays and Sundays (in the configured timezone) the station takes the
+weekend off (to save AI tokens): no audio is fetched and the web page simply shows a
+"back on monday..." notice. This is re-evaluated each hour, so an open page
+suspends and resumes on its own across the weekend boundary without a reload.
+
 ## Requirements
 
 - Docker

@@ -2,13 +2,14 @@ import contextlib
 import html
 import random
 import threading
+import time
 import wave
 from pathlib import Path
 from typing import cast
 
 from flask import Flask, Response, jsonify, send_file
 
-from config import HEISE_PODCAST_WAV, TAGESSCHAU_PODCAST_WAV, WEATHER_WAV
+from config import is_weekend, today_paths
 from heise.fetch_podcast import fetch_heise_podcast
 from tagesschau.fetch_podcast import fetch_tagesschau_podcast
 from weather.fetch_data import fetch_weather_data
@@ -21,19 +22,18 @@ app = Flask(__name__)
 _state: dict[str, str] = {"phase": "creating"}
 # sources whose audio could not be fetched/generated; replaced by a failure jingle
 _failures: set[str] = set()
+# current day's WAV paths per source, refreshed each generation cycle
+_audio_paths: dict[str, str] = {}
 _state_lock = threading.Lock()
+
+# how often the running server re-checks the feeds (and the weekend status)
+_REFRESH_INTERVAL_SECONDS = 3600
 
 _RADIO_PNG = Path(__file__).parent.parent / "radio.png"
 _JINGLES_ROOT = Path(__file__).parent.parent / "jingles"
 _JINGLE_CATEGORIES = ("intro", "random", "outro", "always", "failure")
 _GAP_SECONDS = 1.0  # pause between tracks
 _OUTRO_EXTRA_GAP_SECONDS = 1.0  # additional pause after the outro before the loop repeats
-
-_AUDIO_PATHS: dict[str, str] = {
-    "weather": WEATHER_WAV,
-    "heise": HEISE_PODCAST_WAV,
-    "tagesschau": TAGESSCHAU_PODCAST_WAV,
-}
 
 _HTML = """\
 <!DOCTYPE html>
@@ -286,31 +286,63 @@ _HTML = """\
     player.addEventListener('ended', () => { gapTimer = setTimeout(playNext, gapAfterPlaying()); });
     player.addEventListener('error', () => { gapTimer = setTimeout(playNext, gapAfterPlaying()); });
 
+    function startPlayback() {
+      if (started) return;
+      started = true;
+      fetch('/api/playlist')
+        .then(r => r.json())
+        .then(p => {
+          tracks = p.tracks;
+          idx = 0;
+          buildRotation();
+          showRotationLength(p.total);
+          skipEl.disabled = false;
+          pauseEl.disabled = false;
+          playNext();
+        })
+        .catch(() => { started = false; });
+    }
+
+    // weekend: stop playback and clear the strip so the page can show the notice
+    function suspendPlayback() {
+      if (gapTimer) { clearTimeout(gapTimer); gapTimer = null; }
+      player.pause();
+      player.removeAttribute('src');
+      player.load();
+      started = false;
+      tracks = [];
+      idx = 0;
+      rotationEl.innerHTML = '';
+      segs = [];
+      loopPath.removeAttribute('d');
+      showRotationLength(0);
+      skipEl.disabled = true;
+      pauseEl.disabled = true;
+    }
+
+    // The server keeps fetching hourly and may flip into/out of the weekend
+    // suspend while the page is open, so we poll continuously and react to
+    // phase transitions (not just the initial load).
+    let lastPhase = null;
     function poll() {
       fetch('/api/status')
         .then(r => r.json())
         .then(data => {
-          if (data.phase === 'ready') {
-            if (!started) {
-              started = true;
-              fetch('/api/playlist')
-                .then(r => r.json())
-                .then(p => {
-                  tracks = p.tracks;
-                  buildRotation();
-                  showRotationLength(p.total);
-                  skipEl.disabled = false;
-                  pauseEl.disabled = false;
-                  playNext();
-                })
-                .catch(() => { started = false; setTimeout(poll, 2000); });
-            }
-          } else {
+          const phase = data.phase;
+          if (phase === 'suspended') {
+            if (started || lastPhase !== 'suspended') suspendPlayback();
+            statusEl.className = '';
+            statusEl.textContent = 'back on monday...';
+          } else if (phase === 'ready') {
+            startPlayback();
+          } else if (!started) {
+            statusEl.className = '';
             statusEl.textContent = 'creating latest audio...';
-            setTimeout(poll, 2000);
           }
+          lastPhase = phase;
+          setTimeout(poll, started ? 60000 : 5000);
         })
-        .catch(() => setTimeout(poll, 3000));
+        .catch(() => setTimeout(poll, 5000));
     }
 
     poll();
@@ -323,16 +355,44 @@ _HTML = _HTML.replace("__GAP_MS__", str(int(_GAP_SECONDS * 1000)))
 _HTML = _HTML.replace("__OUTRO_EXTRA_GAP_MS__", str(int(_OUTRO_EXTRA_GAP_SECONDS * 1000)))
 
 
-def _generate() -> None:
-    # Each source is fetched independently so one failure does not block the others.
-    if not Path(WEATHER_WAV).exists():
+def _generate_once() -> None:
+    # Suspend over the weekend: skip all fetching and let the page show a notice.
+    if is_weekend():
+        print("Weekend: suspending audio fetching until Monday")
+        with _state_lock:
+            _state["phase"] = "suspended"
+        return
+
+    paths = today_paths()
+    audio_paths = {
+        "weather": paths.weather_wav,
+        "heise": paths.heise_wav,
+        "tagesschau": paths.tagesschau_wav,
+    }
+
+    # On the first run (or coming back from the weekend) signal that audio is
+    # being prepared; a steady-state refresh leaves "ready" untouched so an
+    # already-playing page is not disrupted.
+    with _state_lock:
+        if _state["phase"] != "ready":
+            _state["phase"] = "creating"
+
+    # The weather greeting is generated once per day; the date-stamped path
+    # changes at midnight, so a new day re-generates it.
+    if not Path(paths.weather_wav).exists():
         try:
-            fetch_weather_data()
-            generate_weather_text()
-            generate_today_greeting_weather_audio()
+            fetch_weather_data(paths.weather_json)
+            generate_weather_text(paths.weather_json, paths.weather_text_txt)
+            generate_today_greeting_weather_audio(
+                paths.weather_json, paths.weather_text_txt, paths.weather_wav, paths.weather_wav_raw
+            )
         except Exception as e:
             print(f"Weather generation error: {e}")
-    for name, fetch in (("heise", fetch_heise_podcast), ("tagesschau", fetch_tagesschau_podcast)):
+    # Each source is fetched independently so one failure does not block the others.
+    for name, fetch in (
+        ("heise", lambda: fetch_heise_podcast(paths.heise_mp3, paths.heise_wav)),
+        ("tagesschau", lambda: fetch_tagesschau_podcast(paths.tagesschau_mp3, paths.tagesschau_wav)),
+    ):
         try:
             fetch()
         except Exception as e:
@@ -340,13 +400,25 @@ def _generate() -> None:
 
     # A source counts as failed when its WAV is missing after the attempt; the
     # playlist then substitutes a failure jingle and the page flags it.
-    failed = {name for name, path in _AUDIO_PATHS.items() if not Path(path).exists()}
+    failed = {name for name, path in audio_paths.items() if not Path(path).exists()}
     if failed:
         print(f"Sources unavailable, playing failure jingle for: {sorted(failed)}")
     with _state_lock:
+        _audio_paths.clear()
+        _audio_paths.update(audio_paths)
         _failures.clear()
         _failures.update(failed)
         _state["phase"] = "ready"
+
+
+def _generate_loop() -> None:
+    """Refresh audio on startup and then every hour for as long as the server runs."""
+    while True:
+        try:
+            _generate_once()
+        except Exception as e:
+            print(f"Generation cycle error: {e}")
+        time.sleep(_REFRESH_INTERVAL_SECONDS)
 
 
 @app.route("/")
@@ -362,7 +434,8 @@ def radio_png():  # type: ignore[return]
 
 @app.route("/audio/<source>")
 def audio(source: str):  # type: ignore[return]
-    path = _AUDIO_PATHS.get(source)
+    with _state_lock:
+        path = _audio_paths.get(source)
     if not path or not Path(path).exists():
         return "Not found", 404
     return send_file(path, mimetype="audio/wav", conditional=True)
@@ -410,6 +483,7 @@ def api_playlist() -> Response:
     """Ordered playlist with optional jingles inserted (omitted when a folder has no .wav)."""
     with _state_lock:
         failures = set(_failures)
+        audio_paths = dict(_audio_paths)
     tracks: list[dict[str, object]] = []
 
     def add_jingle(category: str) -> None:
@@ -434,7 +508,7 @@ def api_playlist() -> Response:
                 "dur": _jingle_avg_duration("failure"),
             })
         else:
-            tracks.append({"src": f"/audio/{name}", "name": name, "dur": _wav_duration(_AUDIO_PATHS[name])})
+            tracks.append({"src": f"/audio/{name}", "name": name, "dur": _wav_duration(audio_paths[name])})
 
     add_jingle("always")
     add_jingle("intro")
@@ -461,5 +535,5 @@ def api_status():  # type: ignore[return]
 
 
 def run_webserver() -> None:
-    threading.Thread(target=_generate, daemon=True).start()
+    threading.Thread(target=_generate_loop, daemon=True).start()
     app.run(host="0.0.0.0", port=8079, threaded=True)

@@ -1,5 +1,6 @@
 import os
 import shutil
+from dataclasses import dataclass
 from datetime import datetime, date, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -18,40 +19,73 @@ if _tz_name is None:
         f"WEATHER_LOCATION_LON={os.environ['WEATHER_LOCATION_LON']}"
     )
 _LOCAL_TZ = ZoneInfo(_tz_name)
+
+
+def is_weekend() -> bool:
+    """True on Saturdays and Sundays in the configured local timezone.
+
+    Used to suspend audio fetching over the weekend.
+    """
+    return datetime.now(_LOCAL_TZ).weekday() >= 5
+
+
 _DATA_ROOT = Path("/app/data")
-_DATE_DIR = _DATA_ROOT / datetime.now(_LOCAL_TZ).strftime("%Y%m%d")
-_HEISE_DIR = _DATE_DIR / "heise"
-_TAGESSCHAU_DIR = _DATE_DIR / "tagesschau"
-_WEATHER_DIR = _DATE_DIR / "weather"
-_HEISE_DIR.mkdir(parents=True, exist_ok=True)
-_TAGESSCHAU_DIR.mkdir(parents=True, exist_ok=True)
-_WEATHER_DIR.mkdir(parents=True, exist_ok=True)
 
-# The following maintenance runs at import time — when config.py is first imported,
-# it iterates /app/data, parses each subdirectory name as a YYYYMMDD date,
-# and removes (via shutil.rmtree) any that are older than 7 days.
-# Non-matching directory names are silently skipped.
-_CUTOFF = datetime.now(_LOCAL_TZ).date() - timedelta(days=7)
-for _d in _DATA_ROOT.iterdir():
-    if _d.is_dir():
-        try:
-            if date.fromisoformat(_d.name[:4] + "-" + _d.name[4:6] + "-" + _d.name[6:8]) < _CUTOFF:
-                shutil.rmtree(_d)
-        except ValueError:
-            pass
-
-WEATHER_JSON = str(_WEATHER_DIR / "weather.json")
-WEATHER_TEXT_TXT = str(_WEATHER_DIR / "weather_text.txt")
-WEATHER_WAV_RAW = str(_WEATHER_DIR / "weather_raw.wav")
-WEATHER_WAV = str(_WEATHER_DIR / "weather.wav")
-
+# Feeds and per-source state that don't depend on the date stay module-level.
 HEISE_PODCAST_FEED_URL = "https://kurzinformiert.podigee.io/feed/mp3"
 HEISE_LAST_EPISODE_JSON = str(_DATA_ROOT / "heise_last_episode.json")
-HEISE_PODCAST_MP3 = str(_HEISE_DIR / "podcast_raw.mp3")
-HEISE_PODCAST_WAV = str(_HEISE_DIR / "podcast.wav")
 
 TAGESSCHAU_PODCAST_FEED_URL = "https://www.tagesschau.de/multimedia/sendung/tagesschau_in_100_sekunden/podcast-ts100-audio-100~podcast.xml"
 TAGESSCHAU_LAST_EPISODE_JSON = str(_DATA_ROOT / "tagesschau_last_episode.json")
-TAGESSCHAU_PODCAST_MP3 = str(_TAGESSCHAU_DIR / "podcast_raw.mp3")
-TAGESSCHAU_PODCAST_WAV = str(_TAGESSCHAU_DIR / "podcast.wav")
+
+
+@dataclass(frozen=True)
+class DailyPaths:
+    """Audio/data file paths for a single day, under data/YYYYMMDD/."""
+
+    weather_json: str
+    weather_text_txt: str
+    weather_wav_raw: str
+    weather_wav: str
+    heise_mp3: str
+    heise_wav: str
+    tagesschau_mp3: str
+    tagesschau_wav: str
+
+
+def _cleanup_old_date_dirs() -> None:
+    """Remove data/YYYYMMDD/ folders older than 7 days; skip non-date names."""
+    cutoff = datetime.now(_LOCAL_TZ).date() - timedelta(days=7)
+    for d in _DATA_ROOT.iterdir():
+        if d.is_dir():
+            try:
+                if date.fromisoformat(d.name[:4] + "-" + d.name[4:6] + "-" + d.name[6:8]) < cutoff:
+                    shutil.rmtree(d)
+            except ValueError:
+                pass
+
+
+def today_paths() -> DailyPaths:
+    """Paths for the current local day, creating the dirs and pruning old ones.
+
+    Recomputed on each call so a long-running process rolls over to a new
+    date folder at midnight (and refreshes the once-per-day weather greeting).
+    """
+    date_dir = _DATA_ROOT / datetime.now(_LOCAL_TZ).strftime("%Y%m%d")
+    heise_dir = date_dir / "heise"
+    tagesschau_dir = date_dir / "tagesschau"
+    weather_dir = date_dir / "weather"
+    for d in (heise_dir, tagesschau_dir, weather_dir):
+        d.mkdir(parents=True, exist_ok=True)
+    _cleanup_old_date_dirs()
+    return DailyPaths(
+        weather_json=str(weather_dir / "weather.json"),
+        weather_text_txt=str(weather_dir / "weather_text.txt"),
+        weather_wav_raw=str(weather_dir / "weather_raw.wav"),
+        weather_wav=str(weather_dir / "weather.wav"),
+        heise_mp3=str(heise_dir / "podcast_raw.mp3"),
+        heise_wav=str(heise_dir / "podcast.wav"),
+        tagesschau_mp3=str(tagesschau_dir / "podcast_raw.mp3"),
+        tagesschau_wav=str(tagesschau_dir / "podcast.wav"),
+    )
 

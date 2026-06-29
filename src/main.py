@@ -6,7 +6,7 @@ from tagesschau.fetch_podcast import fetch_tagesschau_podcast
 from weather.fetch_data import fetch_weather_data
 from weather.generate_greeting_audio import generate_today_greeting_weather_audio
 from weather.generate_text import generate_weather_text
-from config import WEATHER_WAV
+from config import is_weekend, today_paths
 
 
 def main() -> None:
@@ -19,15 +19,24 @@ def main() -> None:
         run_webserver()
         return
 
-    if Path(WEATHER_WAV).exists():
+    # Suspend over the weekend: skip all fetching.
+    if is_weekend():
+        print("Weekend: suspending audio fetching until Monday")
+        return
+
+    paths = today_paths()
+
+    if Path(paths.weather_wav).exists():
         print("Weather already up to date")
     else:
-        fetch_weather_data()
-        generate_weather_text()
-        generate_today_greeting_weather_audio()
+        fetch_weather_data(paths.weather_json)
+        generate_weather_text(paths.weather_json, paths.weather_text_txt)
+        generate_today_greeting_weather_audio(
+            paths.weather_json, paths.weather_text_txt, paths.weather_wav, paths.weather_wav_raw
+        )
 
-    fetch_heise_podcast()
-    fetch_tagesschau_podcast()
+    fetch_heise_podcast(paths.heise_mp3, paths.heise_wav)
+    fetch_tagesschau_podcast(paths.tagesschau_mp3, paths.tagesschau_wav)
 
 
 if __name__ == "__main__":

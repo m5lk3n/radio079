@@ -11,13 +11,11 @@ import requests
 
 from config import (
     HEISE_PODCAST_FEED_URL,
-    HEISE_PODCAST_MP3,
-    HEISE_PODCAST_WAV,
     HEISE_LAST_EPISODE_JSON,
 )
 
 
-def fetch_heise_podcast():
+def fetch_heise_podcast(mp3_path: str, wav_path: str):
     last_exc = None
     for attempt in range(3):
         feed = feedparser.parse(HEISE_PODCAST_FEED_URL)
@@ -55,7 +53,7 @@ def fetch_heise_podcast():
     except (FileNotFoundError, json.JSONDecodeError):
         state = {}
 
-    if state.get("guid") == guid and os.path.exists(HEISE_PODCAST_WAV):
+    if state.get("guid") == guid and os.path.exists(wav_path):
         print(f"Heise podcast already up to date: {latest.get('title', '')!r}")
         return
 
@@ -67,7 +65,7 @@ def fetch_heise_podcast():
         try:
             response = requests.get(enclosure_url, stream=True)
             response.raise_for_status()
-            with open(HEISE_PODCAST_MP3, "wb") as f:
+            with open(mp3_path, "wb") as f:
                 for chunk in response.iter_content(chunk_size=65536):
                     f.write(chunk)
             break
@@ -83,13 +81,13 @@ def fetch_heise_podcast():
     subprocess.run(
         [
             "ffmpeg", "-y",
-            "-i", HEISE_PODCAST_MP3,
+            "-i", mp3_path,
             "-af", "loudnorm=I=-16:LRA=11:TP=-1.5",
-            HEISE_PODCAST_WAV,
+            wav_path,
         ],
         check=True,
     )
-    print(f"Wrote {HEISE_PODCAST_WAV}")
+    print(f"Wrote {wav_path}")
 
     with open(HEISE_LAST_EPISODE_JSON, "w", encoding="utf-8") as f:
         json.dump(
