@@ -4,6 +4,5 @@ rename OPENAI_ to LLM_ (?) (requires README update)
 2nd stream with latest episode from https://www.kicker.de/64/podcaststartseite every 30mins (?)
 support https://www.nachrichtenleicht.de/ playing at 1.5x speed (?)
 make AI optional (?)
-add an easter egg (?)
-(A) add bluetooth streaming mode
+(A) add Bluetooth/USB DAC streaming mode
 (B) deploy
