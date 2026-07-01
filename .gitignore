@@ -4,8 +4,7 @@ data/
 jingles/**
 !/jingles/**/
 !/jingles/**/.gitkeep
-scripts/cartesia/
-scripts/snippets/
+scripts/*/
 *.bak
 __pycache__/
 *.pyc

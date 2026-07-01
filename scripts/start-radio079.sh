@@ -1,6 +1,6 @@
 #!/bin/sh
 
-BASE_DIR="."
+BASE_DIR="$(dirname "$0")/.."
 
 docker run -d \
   --restart unless-stopped \

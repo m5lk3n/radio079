@@ -146,7 +146,7 @@ _HTML = """\
 </head>
 <body>
   <img src="/radio.png" alt="radio 0 7 9"/>
-  <h1>radio 0 7 9</h1>
+  <h1>radio <nowrap>0 7 9</nowrap></h1>
   <p id="status">&mdash;</p>
   <div id="controls">
     <button id="pause" class="btn" disabled><span class="icon" id="pauseIcon">&#9654;</span><span id="pauseLabel">play</span></button>
