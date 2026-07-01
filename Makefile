@@ -62,7 +62,7 @@ webserver: build
 		--env-file .env \
 		-v $(TTS):/app/tts:ro \
 		-v $(DATA):/app/data \
-		-p 8079:8079 \
+		-p 127.0.0.1:8079:8079 \
 		$(IMAGE):$(VERSION) --webserver
 
 ## play: play the generated audio on the local machine, without jingles, using aplay

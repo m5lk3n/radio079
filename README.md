@@ -13,9 +13,11 @@
 </p>
 <!-- markdownlint-enable MD033 -->
 
-A tiny local radio station. Every day it generates a spoken weather greeting
+A tiny **local** radio station. Every day it generates a spoken weather greeting
 for your location and stitches it together with the latest German news podcasts
-into a continuous stream, served from a minimal "now playing" web page.
+into a continuous stream, served from a minimal "now playing" web page over HTTP.
+
+**Downloads the complete latest episode of "heise kurz informiert" and "tagesschau in 100 Sekunden" - heise and Tagesschau/ARD retain copyright over their podcast content. Must not be rebroadcasted beyond [http://localhost:8079](http://localhost:8079), the server must not be exposed!**
 
 ## What it plays
 
@@ -107,20 +109,21 @@ web page footer.
 
 ## Bookmarks
 
-- [Pi FM Kitchen Radio Station](https://github.com/trwmato/pi-fm-kitchen-radio/)
+- [Pi FM Kitchen Radio Station](https://github.com/trwmato/pi-fm-kitchen-radio/) - Main source of inspiration
 - [Podget](https://github.com/dvehrs/podget)
 - Cartesia
   - [Cartesia Text-to-Speech API](https://docs.cartesia.ai/api-reference/tts/bytes)
   - [Cartesia MCP](https://docs.cartesia.ai/tools/ai/mcp)
 
-## Sources
+## Other Sources
 
-- [radio.png](./radio.png) is this [GitHub asset](https://github.githubassets.com/images/icons/emoji/unicode/1f4fb.png?v8)
+- The [radio](./radio.png) emoji image was obtained from [GitHub's emoji asset CDN](https://github.githubassets.com/images/icons/emoji/unicode/1f4fb.png?v8). The underlying artwork is Twemoji by X Corp., licensed under CC BY 4.0. See also [Third Party Notices](./THIRD_PARTY_NOTICES).
+- The lttl.dev logo in the footer is my own.
 
 ## Disclaimer
 
-- This is strictly non-commercial!
-- I used Claude and ChatGPT to realize this project.
+- This is strictly non-commercial and localhost only!
+- I used AI (Claude and ChatGPT) to realize this project.
 - I don't speak Python, I don't like Python.
 - I'm not responsible for external links.
 
