@@ -1,6 +1,7 @@
-IMAGE := lttl.dev/radio079
-SRC   := $(shell pwd)/src
-DATA  := $(shell pwd)/data
+IMAGE   := lttl.dev/radio079
+SRC     := $(shell pwd)/src
+DATA    := $(shell pwd)/data
+JINGLES := $(shell pwd)/jingles
 # grab the latest git tag, remove the 'v' prefix if present, and handle dirty/dev commits
 VERSION ?= $(shell git describe --tags --always --dirty | sed 's/^v//')
 
@@ -50,6 +51,7 @@ shell: build
 	docker run --rm -it \
 		--env-file .env \
 		-v $(DATA):/app/data \
+		-v $(JINGLES):/app/jingles \
 		--entrypoint bash $(IMAGE):$(VERSION)
 
 ## webserver: start the web streaming server on port 8079
@@ -58,6 +60,7 @@ webserver: build
 	docker run --rm \
 		--env-file .env \
 		-v $(DATA):/app/data \
+		-v $(JINGLES):/app/jingles \
 		-p 127.0.0.1:8079:8079 \
 		$(IMAGE):$(VERSION) --webserver
 
@@ -83,4 +86,5 @@ dev: build
 		--env-file .env \
 		-v $(SRC):/app/src \
 		-v $(DATA):/app/data \
+		-v $(JINGLES):/app/jingles \
 		--entrypoint bash $(IMAGE):$(VERSION)

@@ -15,7 +15,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY src/ ./src/
 COPY radio.png .
-COPY jingles/ ./jingles/
 
 # Version metadata, supplied by the Makefile (build args -> runtime env vars).
 # Placed after COPY so changing the version does not invalidate the dependency cache.

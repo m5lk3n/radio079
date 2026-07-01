@@ -149,7 +149,7 @@ _HTML = """\
   <h1>radio 0 7 9</h1>
   <p id="status">&mdash;</p>
   <div id="controls">
-    <button id="pause" class="btn" disabled><span class="icon" id="pauseIcon">&#9208;</span><span id="pauseLabel">pause</span></button>
+    <button id="pause" class="btn" disabled><span class="icon" id="pauseIcon">&#9654;</span><span id="pauseLabel">play</span></button>
     <button id="skip" class="btn" disabled><span class="icon">&#9197;</span>skip to next</button>
   </div>
   <div id="rotationWrap">
