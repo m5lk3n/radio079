@@ -72,6 +72,14 @@ play: needs_aplay
 	aplay data/$$(date +%Y%m%d)/heise/podcast.wav
 	aplay data/$$(date +%Y%m%d)/tagesschau/podcast.wav
 	
+## clean-images: remove old container images, keeping only the current version, plus dangling layers
+.PHONY: clean-images
+clean-images:
+	docker images $(IMAGE) --format '{{.Repository}}:{{.Tag}}' | \
+		grep -F -x -v -e '$(IMAGE):$(VERSION)' -e '$(IMAGE):$(VERSION)-dev' | \
+		xargs -r docker rmi
+	docker image prune -f
+
 ## dev: run the application in development mode, mounting the source code for live editing
 .PHONY: dev
 dev: build
