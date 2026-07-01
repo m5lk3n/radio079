@@ -165,7 +165,7 @@ _HTML = """\
   </div>
   <p id="rotationLen">&mdash;</p>
   <audio id="player"></audio>
-  <footer>v__VERSION__</footer>
+  <footer>v__VERSION__ &middot; on air since 2026/07/01</footer>
   <script>
     const GAP_MS = __GAP_MS__;
     const OUTRO_EXTRA_GAP_MS = __OUTRO_EXTRA_GAP_MS__;

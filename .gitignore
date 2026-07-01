@@ -6,7 +6,6 @@ jingles/**
 !/jingles/**/.gitkeep
 scripts/cartesia/
 scripts/snippets/
-tts/
 *.bak
 __pycache__/
 *.pyc

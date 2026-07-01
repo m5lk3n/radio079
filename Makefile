@@ -1,6 +1,5 @@
 IMAGE := lttl.dev/radio079
 SRC   := $(shell pwd)/src
-TTS   := $(shell pwd)/tts
 DATA  := $(shell pwd)/data
 # grab the latest git tag, remove the 'v' prefix if present, and handle dirty/dev commits
 VERSION ?= $(shell git describe --tags --always --dirty | sed 's/^v//')
@@ -42,7 +41,6 @@ check:
 run: build
 	docker run --rm \
 		--env-file .env \
-		-v $(TTS):/app/tts:ro \
 		-v $(DATA):/app/data \
 		$(IMAGE):$(VERSION)
 
@@ -51,7 +49,6 @@ run: build
 shell: build
 	docker run --rm -it \
 		--env-file .env \
-		-v $(TTS):/app/tts:ro \
 		-v $(DATA):/app/data \
 		--entrypoint bash $(IMAGE):$(VERSION)
 
@@ -60,7 +57,6 @@ shell: build
 webserver: build
 	docker run --rm \
 		--env-file .env \
-		-v $(TTS):/app/tts:ro \
 		-v $(DATA):/app/data \
 		-p 127.0.0.1:8079:8079 \
 		$(IMAGE):$(VERSION) --webserver
@@ -86,6 +82,5 @@ dev: build
 	docker run --rm -it \
 		--env-file .env \
 		-v $(SRC):/app/src \
-		-v $(TTS):/app/tts:ro \
 		-v $(DATA):/app/data \
 		--entrypoint bash $(IMAGE):$(VERSION)

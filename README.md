@@ -11,6 +11,8 @@
 <img alt="language" src="https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white"/>
 <img alt="MIT license" src="https://img.shields.io/badge/License-MIT-green"/>
 </p>
+
+<p align="center">on air since 2026/07/01</p>
 <!-- markdownlint-enable MD033 -->
 
 A tiny **local** radio station. Every day it generates a spoken weather greeting
