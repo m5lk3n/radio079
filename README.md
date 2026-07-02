@@ -5,14 +5,14 @@
 </p>
 <!-- markdownlint-enable MD041 -->
 
-<h1 align="center" style="font-family: 'Courier New', monospace;">radio <nowrap>0 7 9</nowrap></h1>
+<h1 align="center" style="font-family: 'Courier New', monospace;">radio 0&nbsp;7&nbsp;9</h1>
 
 <p align="center">
 <img alt="language" src="https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white"/>
 <img alt="MIT license" src="https://img.shields.io/badge/License-MIT-green"/>
 </p>
 
-<p align="center">on air since 2026/07/01</p>
+<p align="center" style="font-family: 'Courier New', monospace;">on air since 2026/07/01</p>
 <!-- markdownlint-enable MD033 -->
 
 A tiny **local** radio station. Every day it generates a spoken weather greeting

@@ -37,7 +37,7 @@ _OUTRO_EXTRA_GAP_SECONDS = 1.0  # additional pause after the outro before the lo
 
 _HTML = """\
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -57,7 +57,15 @@ _HTML = """\
     gap: 2rem;
   }
   img { width: 64px; height: 64px; image-rendering: pixelated; }
-  h1 { font-size: 3rem; font-weight: normal; letter-spacing: 1rem; color: #fff; }
+  h1 {
+    font-size: clamp(1.4rem, 7vw, 3rem);
+    font-weight: normal;
+    letter-spacing: 0.333em;
+    margin-right: -0.333em;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+  }
   #status { font-size: 0.9rem; color: #555; letter-spacing: 0.1rem; }
   #status.streaming { color: #44aaff; }
   #status.failed { color: #cc4444; }
@@ -146,7 +154,7 @@ _HTML = """\
 </head>
 <body>
   <img src="/radio.png" alt="radio 0 7 9"/>
-  <h1>radio <nowrap>0 7 9</nowrap></h1>
+  <h1>radio 0&nbsp;7&nbsp;9</h1>
   <p id="status">&mdash;</p>
   <div id="controls">
     <button id="pause" class="btn" disabled><span class="icon" id="pauseIcon">&#9654;</span><span id="pauseLabel">play</span></button>
