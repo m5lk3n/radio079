@@ -5,5 +5,3 @@ support a 2nd stream (tab/page) with latest episode from https://www.kicker.de/6
 support https://www.nachrichtenleicht.de/ playing at 1.5x speed (?)
 make AI optional (?)
 add Bluetooth/USB DAC streaming mode (?)
-indicate remaining per audio part
-make rotation dot makers clickable

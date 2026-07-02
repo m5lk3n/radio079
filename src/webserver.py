@@ -109,6 +109,7 @@ _HTML = """\
     gap: 0.5rem;
     transition: border-color 0.2s, color 0.2s;
   }
+  #pause { width: 6.5rem; justify-content: center; }
   .btn:hover:not(:disabled) { border-color: #44aaff; color: #44aaff; }
   .btn:disabled { opacity: 0.3; cursor: default; }
   .btn .icon { font-size: 1rem; line-height: 1; }
@@ -134,6 +135,7 @@ _HTML = """\
     flex-direction: column;
     align-items: center;
     gap: 0.4rem;
+    cursor: pointer;
   }
   .seg .dot {
     width: 0.7rem;
@@ -143,6 +145,8 @@ _HTML = """\
     background: transparent;
     transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
   }
+  .seg:hover .dot { border-color: #44aaff; }
+  .seg:hover .label { color: #44aaff; }
   .seg.jingle .dot { width: 0.4rem; height: 0.4rem; }
   .seg .label {
     font-size: 0.6rem;
@@ -244,10 +248,11 @@ _HTML = """\
 
     function buildRotation() {
       rotationEl.innerHTML = '';
-      segs = tracks.map(t => {
+      segs = tracks.map((t, i) => {
         const seg = document.createElement('div');
         seg.className = 'seg' + (t.jingle ? ' jingle' : '') + (t.failed ? ' failed' : '');
-        seg.title = t.name;
+        seg.title = 'play: ' + t.name;
+        seg.addEventListener('click', () => { idx = i; playNext(); });
         const dot = document.createElement('div');
         dot.className = 'dot';
         seg.appendChild(dot);

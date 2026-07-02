@@ -24,3 +24,5 @@ x 2026-06-28 update README
 x 2026-06-28 add failure handling
 x 2026-06-29 suspend over the weekend
 x 2026-07-02 make sure to not use the same jingles during the same rotation more than once
+x 2026-07-03 indicate remaining per audio part
+x 2026-07-03 make rotation dot makers clickable
