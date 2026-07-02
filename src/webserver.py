@@ -29,7 +29,8 @@ _state_lock = threading.Lock()
 # how often the running server re-checks the feeds (and the weekend status)
 _REFRESH_INTERVAL_SECONDS = 3600
 
-_RADIO_PNG = Path(__file__).parent.parent / "radio.png"
+_RADIO_PNG = Path(__file__).parent.parent / "assets" / "radio.png"
+_SIGN_PNG = Path(__file__).parent.parent / "assets" / "sign.png"
 _JINGLES_ROOT = Path(__file__).parent.parent / "jingles"
 _JINGLE_CATEGORIES = ("intro", "random", "outro", "always", "failure")
 # last jingle served per category, so back-to-back picks (e.g. the two "random"
@@ -37,7 +38,7 @@ _JINGLE_CATEGORIES = ("intro", "random", "outro", "always", "failure")
 _last_jingle: dict[str, Path] = {}
 _jingle_lock = threading.Lock()
 _GAP_SECONDS = 1.0  # pause between tracks
-_OUTRO_EXTRA_GAP_SECONDS = 1.0  # additional pause after the outro before the loop repeats
+_OUTRO_EXTRA_GAP_SECONDS = 4.0  # additional pause after the outro before the loop repeats
 
 _HTML = """\
 <!DOCTYPE html>
@@ -50,7 +51,8 @@ _HTML = """\
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    background: #1a0f0a;
+    position: relative;
+    background-color: #1a0f0a;
     color: #e0e0e0;
     font-family: 'Courier New', monospace;
     display: flex;
@@ -60,6 +62,17 @@ _HTML = """\
     min-height: 100vh;
     gap: 2rem;
   }
+  #bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image: linear-gradient(rgba(6, 4, 3, 0.92), rgba(6, 4, 3, 0.92)), url("/sign.png");
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    transition: filter 1.5s ease;
+  }
+  #bg.paused { filter: grayscale(1); }
   img { width: 64px; height: 64px; image-rendering: pixelated; }
   h1 {
     font-size: clamp(1.4rem, 7vw, 3rem);
@@ -157,6 +170,7 @@ _HTML = """\
 </style>
 </head>
 <body>
+  <div id="bg"></div>
   <img src="/radio.png" alt="radio 0 7 9"/>
   <h1>radio 0&nbsp;7&nbsp;9</h1>
   <p id="status">&mdash;</p>
@@ -185,6 +199,7 @@ _HTML = """\
     let idx = 0;
     let started = false;
     const player = document.getElementById('player');
+    const bgEl = document.getElementById('bg');
     const statusEl = document.getElementById('status');
     const rotationEl = document.getElementById('rotation');
     const rotationLenEl = document.getElementById('rotationLen');
@@ -198,8 +213,13 @@ _HTML = """\
     skipEl.addEventListener('click', () => { if (started) playNext(); });
     pauseEl.addEventListener('click', () => {
       if (!started) return;
-      if (player.paused) player.play().catch(console.error);
-      else player.pause();
+      if (player.paused) {
+        player.play().catch(console.error);
+        bgEl.classList.remove('paused');
+      } else {
+        player.pause();
+        bgEl.classList.add('paused');
+      }
     });
     player.addEventListener('play', () => {
       pauseIcon.innerHTML = '&#9208;';
@@ -442,6 +462,11 @@ def index() -> tuple[str, int, dict[str, str]]:
 @app.route("/favicon.ico")
 def radio_png():  # type: ignore[return]
     return send_file(str(_RADIO_PNG), mimetype="image/png")
+
+
+@app.route("/sign.png")
+def sign_png():  # type: ignore[return]
+    return send_file(str(_SIGN_PNG), mimetype="image/png")
 
 
 @app.route("/audio/<source>")

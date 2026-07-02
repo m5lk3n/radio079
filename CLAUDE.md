@@ -3,6 +3,7 @@
 ## General
 
 - Do not update `docs/todo.txt` or `docs/done.txt`.
+- Do not install any tools.
 
 ## Styling Guidelines
 

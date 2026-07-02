@@ -1,7 +1,7 @@
 <!-- markdownlint-disable MD033 -->
 <!-- markdownlint-disable MD041 -->
 <p align="center">
-<img src="radio.png" alt="Radio"/>
+<img src="assets/radio.png" alt="Radio"/>
 </p>
 <!-- markdownlint-enable MD041 -->
 
@@ -107,7 +107,7 @@ loop with pause and skip controls:
 
 <!-- markdownlint-disable MD033 -->
 <p align="center">
-<img src="screenshot.png" alt="screenshot" width="1200"/>
+<img src="assets/screenshot.png" alt="screenshot" width="1200"/>
 </p>
 <!-- markdownlint-enable MD033 -->
 
@@ -125,7 +125,7 @@ web page footer.
 
 ## Other Sources
 
-- The [radio](./radio.png) emoji image was obtained from [GitHub's emoji asset CDN](https://github.githubassets.com/images/icons/emoji/unicode/1f4fb.png?v8). The underlying artwork is Twemoji by X Corp., licensed under CC BY 4.0. See also [Third Party Notices](./THIRD_PARTY_NOTICES).
+- The [radio](./assets/radio.png) emoji image was obtained from [GitHub's emoji asset CDN](https://github.githubassets.com/images/icons/emoji/unicode/1f4fb.png?v8). The underlying artwork is Twemoji by X Corp., licensed under CC BY 4.0. See also [Third Party Notices](./THIRD_PARTY_NOTICES).
 - The lttl.dev logo in the footer is my own.
 
 ## Disclaimer
@@ -139,5 +139,5 @@ web page footer.
 
 <!-- markdownlint-disable MD033 -->
 <p align="center">
-    <a href="https://lttl.dev/"><img alt="lttl.dev logo" src="logo.png"/></a>
+    <a href="https://lttl.dev/"><img alt="lttl.dev logo" src="assets/logo.png"/></a>
 </p>
