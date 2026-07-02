@@ -32,6 +32,10 @@ _REFRESH_INTERVAL_SECONDS = 3600
 _RADIO_PNG = Path(__file__).parent.parent / "radio.png"
 _JINGLES_ROOT = Path(__file__).parent.parent / "jingles"
 _JINGLE_CATEGORIES = ("intro", "random", "outro", "always", "failure")
+# last jingle served per category, so back-to-back picks (e.g. the two "random"
+# slots in a rotation) don't repeat the same file
+_last_jingle: dict[str, Path] = {}
+_jingle_lock = threading.Lock()
 _GAP_SECONDS = 1.0  # pause between tracks
 _OUTRO_EXTRA_GAP_SECONDS = 1.0  # additional pause after the outro before the loop repeats
 
@@ -481,7 +485,11 @@ def jingle(category: str):  # type: ignore[return]
     files = _jingle_files(category)
     if not files:
         return "Not found", 404
-    resp = send_file(str(random.choice(files)), mimetype="audio/wav", conditional=False)
+    with _jingle_lock:
+        choices = [f for f in files if f != _last_jingle.get(category)] or files
+        pick = random.choice(choices)
+        _last_jingle[category] = pick
+    resp = send_file(str(pick), mimetype="audio/wav", conditional=False)
     resp.headers["Cache-Control"] = "no-store"  # pick a fresh random jingle each loop
     return resp
 

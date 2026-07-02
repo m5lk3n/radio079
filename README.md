@@ -43,6 +43,12 @@ into a continuous stream, served from a minimal "now playing" web page over HTTP
 
   Any folder with no `.wav` files is simply skipped.
 
+  :bulb: If you process your own jingles with ffmpeg's `loudnorm` filter, pass an
+  explicit `-ar` (e.g. `-ar 44100`) to resample the output back down.
+  `loudnorm` oversamples internally for its true-peak limiter and, without
+  `-ar`, leaves the file at 192kHz — multiplying its size and bitrate several
+  times over and making it choppy to stream, especially over WiFi to a phone.
+
 Generated audio is written under `data/YYYYMMDD/`. The weather greeting is only
 created once per day, and date folders older than 7 days are cleaned up
 automatically.

@@ -7,4 +7,3 @@ make AI optional (?)
 add Bluetooth/USB DAC streaming mode (?)
 indicate remaining per audio part
 make rotation dot makers clickable
-make sure to not use the same jingles during the same rotation more than once
