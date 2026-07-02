@@ -1,6 +1,7 @@
 #!/bin/sh
 
-BASE_DIR="$(dirname "$0")/.."
+BASE_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+VERSION=$(git describe --tags --always --dirty | sed 's/^v//')
 
 docker run -d \
   --restart unless-stopped \
@@ -11,4 +12,4 @@ docker run -d \
   -e PUID=$(id -u) \
   -e PGID=$(id -g) \
   --name radio079 \
- lttl.dev/radio079:0.2.1 --webserver
+  lttl.dev/radio079:${VERSION} --webserver
