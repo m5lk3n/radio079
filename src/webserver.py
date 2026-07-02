@@ -86,7 +86,13 @@ _HTML = """\
   #status { font-size: 0.9rem; color: #555; letter-spacing: 0.1rem; }
   #status.streaming { color: #44aaff; }
   #status.failed { color: #cc4444; }
-  #rotationLen { font-size: 0.75rem; color: #555; letter-spacing: 0.1rem; }
+  #rotationLen, #remaining {
+    font-size: 0.75rem;
+    color: #555;
+    letter-spacing: 0.1rem;
+    line-height: 1.4;
+    min-height: 1.4em;
+  }
   #controls { display: flex; gap: 1rem; }
   .btn {
     font-family: inherit;
@@ -189,6 +195,7 @@ _HTML = """\
     </svg>
     <div id="rotation"></div>
   </div>
+  <p id="remaining">&mdash;</p>
   <p id="rotationLen">&mdash;</p>
   <audio id="player"></audio>
   <footer>v__VERSION__ &middot; on air since 2026/07/01</footer>
@@ -203,6 +210,7 @@ _HTML = """\
     const statusEl = document.getElementById('status');
     const rotationEl = document.getElementById('rotation');
     const rotationLenEl = document.getElementById('rotationLen');
+    const remainingEl = document.getElementById('remaining');
     const rotationWrap = document.getElementById('rotationWrap');
     const loopPath = document.getElementById('loopPath');
     const skipEl = document.getElementById('skip');
@@ -290,6 +298,19 @@ _HTML = """\
       segs.forEach((seg, i) => seg.classList.toggle('active', i === current));
     }
 
+    function updateRemaining() {
+      if (!isFinite(player.duration) || player.duration <= 0) {
+        remainingEl.textContent = '';
+        return;
+      }
+      const secs = Math.ceil(Math.max(0, player.duration - player.currentTime));
+      const m = Math.floor(secs / 60);
+      const s = String(secs % 60).padStart(2, '0');
+      remainingEl.textContent = m + ':' + s + ' remaining';
+    }
+    player.addEventListener('timeupdate', updateRemaining);
+    player.addEventListener('durationchange', updateRemaining);
+
     function playNext() {
       if (gapTimer) { clearTimeout(gapTimer); gapTimer = null; }
       if (!tracks.length) return;
@@ -305,6 +326,7 @@ _HTML = """\
         statusEl.className = 'streaming';
         statusEl.textContent = 'now streaming: ' + t.name;
       }
+      remainingEl.textContent = '';
       // cache-buster so jingles (incl. failure) get a fresh random pick each loop
       player.src = (t.jingle || t.failed) ? t.src + '?_=' + Date.now() : t.src;
       player.play().catch(console.error);
