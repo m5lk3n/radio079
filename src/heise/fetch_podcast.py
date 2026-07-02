@@ -83,6 +83,7 @@ def fetch_heise_podcast(mp3_path: str, wav_path: str):
             "ffmpeg", "-y",
             "-i", mp3_path,
             "-af", "loudnorm=I=-16:LRA=11:TP=-1.5",
+            "-ar", "44100",
             wav_path,
         ],
         check=True,

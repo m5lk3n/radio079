@@ -29,6 +29,7 @@ def generate_today_greeting_weather_audio(
             "ffmpeg", "-y",
             "-i", weather_wav_raw,
             "-af", "loudnorm=I=-16:LRA=11:TP=-1.5",
+            "-ar", "44100",
             weather_wav,
         ],
         check=True,
