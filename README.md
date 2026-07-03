@@ -129,13 +129,13 @@ web page footer.
 
 ## Other Sources
 
-- The [radio](./assets/radio.png) emoji image was obtained from [GitHub's emoji asset CDN](https://github.githubassets.com/images/icons/emoji/unicode/1f4fb.png?v8). The underlying artwork is Twemoji by X Corp., licensed under CC BY 4.0. See also [Third Party Notices](./THIRD_PARTY_NOTICES).
+- The [radio emoji image](./assets/radio.png) was obtained from [GitHub's emoji asset CDN](https://github.githubassets.com/images/icons/emoji/unicode/1f4fb.png?v8). The underlying artwork is Twemoji by X Corp., licensed under CC BY 4.0. See also [Third Party Notices](./THIRD_PARTY_NOTICES).
 - The lttl.dev logo in the footer is my own.
 
 ## Disclaimer
 
 - This is strictly non-commercial and localhost only!
-- I used AI (Claude and ChatGPT) to realize this project.
+- I used AI (Claude and ChatGPT) to realize this project. The [r079 sign](assets/sign.png) is custom-generated art by ChatGPT.
 - I don't speak Python, I don't like Python.
 - I'm not responsible for external links.
 
