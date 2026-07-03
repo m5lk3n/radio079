@@ -115,6 +115,10 @@ The Docker image is tagged with the current version, derived from the latest git
 via `git describe` (semver, `v` prefix stripped). The version is shown in the
 web page footer.
 
+## Known Limitations
+
+- "Auto-next" may only work when the browser window/tab is currently active.
+
 ## Bookmarks
 
 - [Pi FM Kitchen Radio Station](https://github.com/trwmato/pi-fm-kitchen-radio/) - Main source of inspiration
