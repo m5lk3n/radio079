@@ -49,6 +49,7 @@ Kein Intro — fang direkt mit einer stimmungsvollen Aussage an.
 Keine Aufzählungen, fließender Text.
 Verwende informelle Sprache, als würdest du mit einem Freund sprechen.
 Kein Wechsel der Sprache, bleibe durchgehend auf Deutsch.
+Konvertiere "xy-Grad-Marke" in "xy Grad Marke" (wobei xy eine Zahl und Tagestemperatur ist).
 """
 
 
