@@ -21,12 +21,24 @@ if _tz_name is None:
 _LOCAL_TZ = ZoneInfo(_tz_name)
 
 
-def is_weekend() -> bool:
-    """True on Saturdays and Sundays in the configured local timezone.
+def _env_flag(name: str) -> bool:
+    """Read a boolean env var; unset/empty counts as false."""
+    return os.environ.get(name, "").strip().lower() in ("1", "true", "yes", "on")
 
-    Used to suspend audio fetching over the weekend.
-    """
+
+# Opt-in: when enabled, no audio is fetched on Saturdays/Sundays and the page
+# shows a "back on monday..." notice. Off by default (radio runs all week).
+WEEKEND_SUSPEND = _env_flag("WEEKEND_SUSPEND")
+
+
+def _is_weekend() -> bool:
+    """True on Saturdays and Sundays in the configured local timezone."""
     return datetime.now(_LOCAL_TZ).weekday() >= 5
+
+
+def suspend_over_weekend() -> bool:
+    """Whether audio fetching should be suspended right now (toggle on and weekend)."""
+    return WEEKEND_SUSPEND and _is_weekend()
 
 
 _DATA_ROOT = Path("/app/data")

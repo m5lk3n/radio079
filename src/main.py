@@ -6,7 +6,7 @@ from tagesschau.fetch_podcast import fetch_tagesschau_podcast
 from weather.fetch_data import fetch_weather_data
 from weather.generate_greeting_audio import generate_today_greeting_weather_audio
 from weather.generate_text import generate_weather_text
-from config import is_weekend, today_paths
+from config import suspend_over_weekend, today_paths
 
 
 def main() -> None:
@@ -19,8 +19,8 @@ def main() -> None:
         run_webserver()
         return
 
-    # Suspend over the weekend: skip all fetching.
-    if is_weekend():
+    # Suspend over the weekend when enabled: skip all fetching.
+    if suspend_over_weekend():
         print("Weekend: suspending audio fetching until Monday")
         return
 

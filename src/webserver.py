@@ -9,7 +9,7 @@ from typing import cast
 
 from flask import Flask, Response, jsonify, send_file
 
-from config import is_weekend, today_paths
+from config import suspend_over_weekend, today_paths
 from heise.fetch_podcast import fetch_heise_podcast
 from tagesschau.fetch_podcast import fetch_tagesschau_podcast
 from weather.fetch_data import fetch_weather_data
@@ -415,8 +415,8 @@ _HTML = _HTML.replace("__OUTRO_EXTRA_GAP_MS__", str(int(_OUTRO_EXTRA_GAP_SECONDS
 
 
 def _generate_once() -> None:
-    # Suspend over the weekend: skip all fetching and let the page show a notice.
-    if is_weekend():
+    # Suspend over the weekend when enabled: skip all fetching, show a notice.
+    if suspend_over_weekend():
         print("Weekend: suspending audio fetching until Monday")
         with _state_lock:
             _state["phase"] = "suspended"

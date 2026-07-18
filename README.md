@@ -59,10 +59,11 @@ published (the weather greeting is still generated only once per day). No
 restart is needed — the container can run for weeks and rolls over to a new
 `data/YYYYMMDD/` folder at midnight on its own.
 
-On Saturdays and Sundays (in the configured timezone) the station takes the
-weekend off (to save AI tokens): no audio is fetched and the web page simply shows a
-"back on monday..." notice. This is re-evaluated each hour, so an open page
-suspends and resumes on its own across the weekend boundary without a reload.
+Optionally (via `WEEKEND_SUSPEND`, off by default) the station can take
+Saturdays and Sundays off (in the configured timezone, to save AI tokens): no
+audio is fetched and the web page simply shows a "back on monday..." notice.
+This is re-evaluated each hour, so an open page suspends and resumes on its own
+across the weekend boundary without a reload.
 
 ## Requirements
 
@@ -89,6 +90,7 @@ Copy [.env.example](./.env.example) to `.env` and fill in the values:
 | `WEATHER_LOCATION_LON` | Longitude of your location |
 | `WEATHER_LOCATION_ALIAS` | Friendly location name used in the greeting |
 | `WEATHER_TIMEZONE` | IANA timezone, e.g. `Europe/London` |
+| `WEEKEND_SUSPEND` | Suspend fetching on Sat/Sun (`true`/`1`/`yes`/`on`); off by default |
 
 ## Usage
 
